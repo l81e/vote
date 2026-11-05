@@ -30,7 +30,6 @@
       --white: #f7f5f4;
       --blue: #1a5fa8;
       --champ: #b8973a;
-      --champ-dark: #9a7d2e;
       --burg: #7d2040;
       --orange: #c4601a;
       --orange-dark: #a34e14;
@@ -51,6 +50,7 @@
       --divider: var(--carbon-20);
       font-family: 'Inter', sans-serif; background: var(--page-bg); color: var(--text-primary); line-height: 1.6;
       touch-action: manipulation;
+      padding-bottom: calc(24px + var(--safe-bottom));
       transition: background .2s ease, color .2s ease;
     }
     body.theme-dark {
@@ -66,7 +66,7 @@
     button { font-family: inherit; }
     input { font-family: inherit; }
 
-    /* HEADER */
+    /* HEADER (logo only) */
     .site-header {
       background: var(--black);
       padding: var(--safe-top) 32px 0;
@@ -79,12 +79,6 @@
       width: 34px; height: 34px; background: none; border: none; cursor: pointer;
       color: var(--white); display: flex; align-items: center; justify-content: center;
     }
-
-    /* HERO */
-    .hero { padding: 36px 40px 32px; border-bottom: 1px solid var(--divider); max-width: 760px; margin: 0 auto; }
-    .label-tag { font-size: .68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 6px; }
-    .hero-title { font-weight: 700; font-size: 1.7rem; line-height: 1.3; margin-bottom: 8px; }
-    .hero-dek { font-size: .95rem; color: var(--text-secondary); }
 
     /* SECTIONS */
     section.block { padding: 40px 40px; max-width: 760px; margin: 0 auto; }
@@ -116,14 +110,13 @@
       display: flex; align-items: center; justify-content: center; color: transparent; transition: all .15s;
     }
     .tt-card.selected .tt-check { background: var(--tt-color); border-color: var(--tt-color); color: #fff; }
-    .tt-note { padding: 0 18px 12px; font-size: .8rem; color: var(--text-secondary); }
-    .tt-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .tt-table { width: 100%; border-collapse: collapse; font-size: .84rem; }
     .tt-table th {
       text-align: left; padding: 8px 18px; font-size: .64rem; letter-spacing: 1.4px; text-transform: uppercase;
       color: var(--text-tertiary); border-top: 1px solid var(--divider); background: var(--surface-alt-bg);
     }
     .tt-table td { padding: 9px 18px; border-top: 1px solid var(--divider); color: var(--text-primary); }
-    .tt-table td:first-child { font-weight: 600; white-space: nowrap; }
+    .tt-table td:first-child { font-weight: 600; white-space: nowrap; width: 90px; }
 
     /* FORM */
     .field { margin-bottom: 16px; }
@@ -165,7 +158,7 @@
     body.theme-dark .msg.error { color: #f0a36b; }
 
     /* DONE */
-    .done { text-align: center; padding: 60px 20px; }
+    .done { text-align: center; padding: 80px 20px; }
     .done-icon {
       width: 64px; height: 64px; border-radius: 50%; background: var(--green); color: #fff;
       display: flex; align-items: center; justify-content: center; margin: 0 auto 18px;
@@ -173,19 +166,9 @@
     .done h2 { font-family: 'Merriweather','Inter',serif; font-size: 1.3rem; margin-bottom: 8px; }
     .done p { font-size: .88rem; color: var(--text-secondary); }
 
-    /* FOOTER */
-    footer { background: var(--black); color: var(--white); padding: 40px 40px calc(28px + var(--safe-bottom)); margin-top: 20px; }
-    .footer-inner { max-width: 760px; margin: 0 auto; }
-    .footer-logo img { height: 26px; filter: brightness(0) invert(1); margin-bottom: 12px; }
-    .footer-desc { font-size: .8rem; color: var(--carbon-30); line-height: 1.7; margin-bottom: 14px; }
-    .footer-bottom { font-size: .73rem; color: var(--carbon-40); border-top: 1px solid var(--carbon-80); padding-top: 14px; }
-
     @media (max-width: 640px) {
       .site-header { padding-left: 20px; padding-right: 20px; }
-      .hero { padding: 28px 20px 26px; }
-      .hero-title { font-size: 1.35rem; }
       section.block { padding: 32px 20px; }
-      footer { padding: 36px 20px calc(24px + var(--safe-bottom)); }
     }
   </style>
 </head>
@@ -204,16 +187,10 @@
   </button>
 </header>
 
-<div class="hero">
-  <p class="label-tag">Student Vote · Finals</p>
-  <h1 class="hero-title">Choose your finals timetable</h1>
-  <p class="hero-dek">Two timetables are on the table. Review both, pick one, and verify your identity. One vote per student.</p>
-</div>
-
 <div id="votePage">
   <section class="block">
     <h2 class="section-title"><span class="step-num">1</span>Pick a timetable</h2>
-    <p class="section-sub">Tap a card to select it.</p>
+    <p class="section-sub">Tap a card to select it. One vote per student.</p>
     <div class="tt-grid" id="ttGrid"></div>
   </section>
 
@@ -263,40 +240,50 @@
   </div>
 </div>
 
-<footer>
-  <div class="footer-inner">
-    <div class="footer-logo"><img src="IMG_3083.png" alt="MedicineBank" /></div>
-    <p class="footer-desc">A student-driven foundation fostering academic excellence, research innovation, and global connectivity — serving medical students across Egypt and the Arab region.</p>
-    <div class="footer-bottom">© 2026 MedicineBank Initiative · Dakahlia, Egypt</div>
-  </div>
-</footer>
-
 <script>
   /* ══ CONFIG ══ */
   const SUPABASE_URL = 'https://ltxgafwywkdcxdlobcah.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0eGdhZnd5d2tkY3hkbG9iY2FoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU3NzUsImV4cCI6MjEwMDUwMTc3NX0.CR-FvlL1HODWjsD7VrZkWQvg_pEasIhPQBXbSHbbNoE';
   const BUCKET = 'vote-ids';
 
-  // EDIT THESE: the two timetables students choose between
   const TIMETABLES = [
     {
-      key: 'A', name: 'Timetable A', color: '#1a5fa8',
-      note: 'Compact schedule — finals finish sooner, less rest between exams.',
+      key: '1', name: 'Timetable 1', color: '#1a5fa8',
       rows: [
-        ['Sat 10 Jan', 'Subject 1', '10:00'],
-        ['Mon 12 Jan', 'Subject 2', '10:00'],
-        ['Wed 14 Jan', 'Subject 3', '10:00'],
-        ['Fri 16 Jan', 'Subject 4', '10:00'],
+        ['19/12', 'Final Renal'],
+        ['22/12', 'OSPE Renal'],
+        ['28/12', 'Final RESP'],
+        ['31/12', 'OSPE RESP'],
+        ['3/1',   'Final ECE + Elective'],
+        ['5/1',   'OSPE ECE'],
+        ['13/1',  'Final CVS'],
+        ['17/1',  'OSPE CVS'],
       ],
     },
     {
-      key: 'B', name: 'Timetable B', color: '#c4601a',
-      note: 'Spread schedule — more study days between exams, ends later.',
+      key: '2', name: 'Timetable 2', color: '#c4601a',
       rows: [
-        ['Sat 10 Jan', 'Subject 1', '10:00'],
-        ['Wed 14 Jan', 'Subject 2', '10:00'],
-        ['Sun 18 Jan', 'Subject 3', '10:00'],
-        ['Thu 22 Jan', 'Subject 4', '10:00'],
+        ['19/12', 'Elective'],
+        ['22/12', 'Final CVS'],
+        ['26/12', 'OSPE CVS'],
+        ['31/12', 'Final Renal'],
+        ['3/1',   'OSPE Renal'],
+        ['10/1',  'Final Resp'],
+        ['13/1',  'OSPE Resp'],
+        ['17/1',  'ECE Final & OSPE'],
+      ],
+    },
+    {
+      key: '3', name: 'Timetable 3', color: '#7d2040',
+      rows: [
+        ['22/12', 'Final CVS'],
+        ['26/12', 'OSPE CVS'],
+        ['31/12', 'Final Renal'],
+        ['3/1',   'OSPE Renal'],
+        ['5/1',   'Elective'],
+        ['10/1',  'Final Resp'],
+        ['13/1',  'OSPE Resp'],
+        ['17/1',  'ECE Final & OSPE'],
       ],
     },
   ];
@@ -348,9 +335,8 @@
           '<span class="tt-name">' + escHtml(t.name) + '</span>' +
           '<span class="tt-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></span>' +
         '</div>' +
-        '<div class="tt-note">' + escHtml(t.note) + '</div>' +
-        '<table class="tt-table"><thead><tr><th>Date</th><th>Exam</th><th>Time</th></tr></thead><tbody>' +
-          t.rows.map(r => '<tr><td>' + escHtml(r[0]) + '</td><td>' + escHtml(r[1]) + '</td><td>' + escHtml(r[2]) + '</td></tr>').join('') +
+        '<table class="tt-table"><thead><tr><th>Date</th><th>Exam</th></tr></thead><tbody>' +
+          t.rows.map(r => '<tr><td>' + escHtml(r[0]) + '</td><td>' + escHtml(r[1]) + '</td></tr>').join('') +
         '</tbody></table>' +
       '</div>'
     )).join('');
