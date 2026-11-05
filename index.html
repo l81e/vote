@@ -67,9 +67,21 @@
     button { font-family: inherit; }
     input { font-family: inherit; }
 
+    /* COUNTDOWN BAR */
+    .countdown {
+      position: sticky; top: 0; z-index: 1000;
+      background: var(--orange); color: #fff;
+      padding: calc(var(--safe-top) + 10px) 20px 10px;
+      display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+      text-align: center;
+    }
+    .countdown.closed { background: var(--burg); }
+    .cd-text { font-size: .74rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+    .cd-time { font-size: 1.05rem; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+
     /* HERO */
     .hero {
-      padding: calc(var(--safe-top) + 36px) 40px 32px;
+      padding: 36px 40px 32px;
       border-bottom: 1px solid var(--divider);
       max-width: 760px; margin: 0 auto;
     }
@@ -124,12 +136,13 @@
     }
     .field input:focus { border-color: var(--text-primary); }
 
-    /* CAMERA */
+    /* CAMERA / UPLOAD */
     .cam-box {
       background: var(--black); border-radius: 2px; overflow: hidden; position: relative;
       aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center;
     }
-    .cam-box video, .cam-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .cam-box video { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .cam-box img { width: 100%; height: 100%; object-fit: contain; display: none; }
     .cam-placeholder { color: var(--carbon-40); font-size: .82rem; text-align: center; padding: 20px; }
     .cam-frame {
       position: absolute; inset: 14% 10%; border: 2px dashed rgba(255,255,255,.55); border-radius: 6px; pointer-events: none; display: none;
@@ -154,17 +167,18 @@
     .msg.error { display: block; background: rgba(196,96,26,.12); color: var(--orange-dark); border: 1px solid var(--orange); }
     body.theme-dark .msg.error { color: #f0a36b; }
 
-    /* DONE */
-    .done { text-align: center; padding: calc(var(--safe-top) + 80px) 20px 80px; }
+    /* DONE / CLOSED */
+    .done { text-align: center; padding: 80px 20px; }
     .done-icon {
       width: 64px; height: 64px; border-radius: 50%; background: var(--green); color: #fff;
       display: flex; align-items: center; justify-content: center; margin: 0 auto 18px;
     }
+    .done-icon.closed { background: var(--burg); }
     .done h2 { font-family: 'Merriweather','Inter',serif; font-size: 1.3rem; margin-bottom: 8px; }
     .done p { font-size: .88rem; color: var(--text-secondary); }
 
     @media (max-width: 640px) {
-      .hero { padding: calc(var(--safe-top) + 28px) 20px 26px; }
+      .hero { padding: 28px 20px 26px; }
       .hero-title { font-size: 1.35rem; }
       section.block { padding: 32px 20px; }
     }
@@ -177,6 +191,11 @@
     document.body.classList.add(s === 'theme-dark' ? 'theme-dark' : 'theme-light');
   })();
 </script>
+
+<div class="countdown" id="countdown">
+  <span class="cd-text" id="cdText">Voting ends tonight at 12:00 AM</span>
+  <span class="cd-time" id="cdTime">--:--:--</span>
+</div>
 
 <div id="votePage">
   <div class="hero">
@@ -200,9 +219,9 @@
 
   <section class="block" style="padding-top:0;">
     <h2 class="section-title"><span class="step-num">3</span>Photo of your university ID</h2>
-    <p class="section-sub">Hold your ID inside the frame so the text is readable.</p>
+    <p class="section-sub">Take a photo or upload an image. The ID text must be readable.</p>
     <div class="cam-box" id="camBox">
-      <div class="cam-placeholder" id="camPlaceholder">Camera is off</div>
+      <div class="cam-placeholder" id="camPlaceholder">No photo yet</div>
       <video id="camVideo" autoplay playsinline muted></video>
       <img id="camPreview" alt="ID photo preview" />
       <div class="cam-frame" id="camFrame"></div>
@@ -211,7 +230,9 @@
       <button class="btn secondary" id="openCamBtn" type="button">Open camera</button>
       <button class="btn" id="captureBtn" type="button" style="display:none;">Capture</button>
       <button class="btn secondary" id="retakeBtn" type="button" style="display:none;">Retake</button>
+      <button class="btn secondary" id="uploadBtn" type="button">Upload image</button>
     </div>
+    <input type="file" id="fileInput" accept="image/*" style="display:none;" />
     <canvas id="camCanvas" style="display:none;"></canvas>
   </section>
 
@@ -229,10 +250,10 @@
 
 <div id="donePage" style="display:none;">
   <div class="done">
-    <div class="done-icon">
+    <div class="done-icon" id="doneIcon">
       <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
-    <h2>Your vote is in</h2>
+    <h2 id="doneTitle">Your vote is in</h2>
     <p id="doneText">Thank you for taking part.</p>
   </div>
 </div>
@@ -242,6 +263,10 @@
   const SUPABASE_URL = 'https://igfooetzorzhhvpakgqa.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZm9vZXR6b3J6aGh2cGFrZ3FhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5ODg2NTksImV4cCI6MjEwNDU2NDY1OX0.1XLeeRi4KFJptk73JKx_vs0FlO5EXM17KIyFSaKWLCA';
   const BUCKET = 'vote-ids';
+
+  // Voting ends at 12:00 AM (midnight) tonight, Cairo time (UTC+2)
+  const DEADLINE = new Date('2026-11-06T00:00:00+02:00').getTime();
+  const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
   const TIMETABLES = [
     {
@@ -315,6 +340,33 @@
     window.scrollTo({ top: 0 });
   }
 
+  /* ══ COUNTDOWN ══ */
+  let votingClosed = false;
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function closeVoting() {
+    if (votingClosed) return;
+    votingClosed = true;
+    $('countdown').classList.add('closed');
+    $('cdText').textContent = 'Voting has ended';
+    $('cdTime').textContent = '';
+    if (localStorage.getItem('mb_voted') !== '1') {
+      $('doneIcon').classList.add('closed');
+      $('doneIcon').innerHTML = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      $('doneTitle').textContent = 'Voting has ended';
+      showDone('The voting window closed at 12:00 AM. Thank you for your interest.');
+    }
+  }
+
+  function tick() {
+    const left = DEADLINE - Date.now();
+    if (left <= 0) { closeVoting(); return; }
+    const h = Math.floor(left / 3600000);
+    const m = Math.floor((left % 3600000) / 60000);
+    const s = Math.floor((left % 60000) / 1000);
+    $('cdTime').textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+  }
+
   /* ══ TIMETABLES ══ */
   let selected = null;
   function renderTimetables() {
@@ -338,13 +390,28 @@
     });
   }
 
-  /* ══ CAMERA ══ */
-  let stream = null, photoBlob = null;
+  /* ══ CAMERA + UPLOAD ══ */
+  let stream = null, photoBlob = null, photoType = 'image/jpeg';
+
+  function showPreview(blob) {
+    photoBlob = blob;
+    photoType = blob.type || 'image/jpeg';
+    const img = $('camPreview');
+    img.src = URL.createObjectURL(blob);
+    img.style.display = 'block';
+    $('camPlaceholder').style.display = 'none';
+    $('camVideo').style.display = 'none';
+    $('camFrame').style.display = 'none';
+    $('captureBtn').style.display = 'none';
+    $('openCamBtn').style.display = 'none';
+    $('retakeBtn').style.display = 'block';
+    $('uploadBtn').textContent = 'Upload a different image';
+  }
 
   async function openCamera() {
     clearError();
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      showError('Camera is not available. Open this page over HTTPS in a modern browser.');
+      showError('Camera is not available here. You can upload an image instead.');
       return;
     }
     try {
@@ -362,7 +429,7 @@
       $('captureBtn').style.display = 'block';
       $('retakeBtn').style.display = 'none';
     } catch (err) {
-      showError('Could not open the camera. Please allow camera access and try again.');
+      showError('Could not open the camera. Allow camera access, or upload an image instead.');
     }
   }
 
@@ -378,25 +445,34 @@
     c.width = v.videoWidth; c.height = v.videoHeight;
     c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
     c.toBlob((blob) => {
-      photoBlob = blob;
-      const img = $('camPreview');
-      img.src = URL.createObjectURL(blob);
-      img.style.display = 'block';
       stopCamera();
-      $('captureBtn').style.display = 'none';
-      $('retakeBtn').style.display = 'block';
+      showPreview(blob);
     }, 'image/jpeg', 0.85);
   }
 
   function retake() {
     photoBlob = null;
     $('camPreview').style.display = 'none';
+    $('uploadBtn').textContent = 'Upload image';
     openCamera();
+  }
+
+  function onFileChosen() {
+    clearError();
+    const f = $('fileInput').files[0];
+    $('fileInput').value = '';
+    if (!f) return;
+    if (!f.type.startsWith('image/')) return showError('Please choose an image file.');
+    if (f.size > MAX_UPLOAD_BYTES) return showError('Image is too large (10 MB max).');
+    stopCamera();
+    showPreview(f);
   }
 
   $('openCamBtn').addEventListener('click', openCamera);
   $('captureBtn').addEventListener('click', capture);
   $('retakeBtn').addEventListener('click', retake);
+  $('uploadBtn').addEventListener('click', () => $('fileInput').click());
+  $('fileInput').addEventListener('change', onFileChosen);
 
   /* ══ SUBMIT ══ */
   let submitting = false;
@@ -404,13 +480,15 @@
     if (submitting) return;
     clearError();
 
+    if (Date.now() >= DEADLINE) { closeVoting(); return; }
+
     const name = $('fullName').value.trim();
     const uid = $('uniId').value.trim();
 
     if (!selected) return showError('Please pick a timetable.');
     if (name.split(/\s+/).length < 2) return showError('Please enter your full name.');
     if (!/^[A-Za-z0-9\-\/]{4,20}$/.test(uid)) return showError('Please enter a valid university ID number.');
-    if (!photoBlob) return showError('Please take a photo of your university ID.');
+    if (!photoBlob) return showError('Please take or upload a photo of your university ID.');
     if (!$('consentChk').checked) return showError('Please tick the confirmation box.');
 
     const sbc = client();
@@ -432,8 +510,9 @@
       }
 
       // 2) Upload ID photo
-      const path = normUid.replace(/[^a-z0-9]/g, '') + '_' + Date.now() + '.jpg';
-      const { error: e2 } = await sbc.storage.from(BUCKET).upload(path, photoBlob, { contentType: 'image/jpeg', upsert: false });
+      const ext = photoType === 'image/png' ? 'png' : photoType === 'image/webp' ? 'webp' : 'jpg';
+      const path = normUid.replace(/[^a-z0-9]/g, '') + '_' + Date.now() + '.' + ext;
+      const { error: e2 } = await sbc.storage.from(BUCKET).upload(path, photoBlob, { contentType: photoType, upsert: false });
       if (e2) throw e2;
 
       // 3) Cast vote (IP recorded server-side; duplicates rejected by the database)
@@ -463,6 +542,8 @@
   /* ══ INIT ══ */
   document.addEventListener('DOMContentLoaded', () => {
     renderTimetables();
+    tick();
+    setInterval(tick, 1000);
     if (localStorage.getItem('mb_voted') === '1') {
       showDone('You have already voted from this device. Thank you!');
     }
