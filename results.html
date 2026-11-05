@@ -1,324 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Finals Vote Results · MedicineBank Initiative</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#c4601a" />
+<title>Finals Vote Results · MedicineBank Initiative</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Merriweather:wght@700&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+:root{--orange:#c4601a;--burg:#7d2040;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+body{--c1:#1a5fa8;--c2:#c4601a;--c3:#7d2040;--bg:#f7f5f4;--sf:#fff;--sf2:#f5f5f5;--tx:#0b0b0b;--tx2:#58585b;--tx3:#8e8e8e;--dv:#d9d9d9;--warn:#a34e14;font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;min-height:100vh;padding-bottom:calc(32px + var(--sb));-webkit-tap-highlight-color:transparent;transition:background .2s,color .2s}
+body.theme-dark{--c1:#4a8fd6;--c2:#e0762e;--c3:#c8587f;--bg:#0e0e0e;--sf:#161616;--sf2:#1c1c1c;--tx:#f7f5f4;--tx2:#b9b9bb;--dv:#2b2b2b;--warn:#f0a36b}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pulse{50%{opacity:.25}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes sh{to{background-position:-200% 0}}
 
-  <meta name="theme-color" content="#0b0b0b" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+/* TOP BAR */
+.top{position:sticky;top:0;z-index:20;background:var(--orange);color:#fff;padding:calc(var(--st) + 10px) 8px 10px 16px;display:flex;justify-content:space-between;align-items:center;transition:background .3s}
+body.closed .top{background:var(--burg)}
+.top b{font-size:.95rem}
+.cd{font-size:.72rem;font-weight:600;letter-spacing:.6px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.6s infinite}
+body.closed .dot{animation:none}
+.ic{display:flex}
+.ic button{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;color:#fff}
+.ic button:active{background:rgba(255,255,255,.2)}
+.spin .i{animation:spin .8s linear infinite}
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Merriweather:wght@300;700&display=swap" rel="stylesheet" />
+.pane{max-width:760px;margin:0 auto;padding:20px 16px;animation:rise .35s ease}
+.tag{font-size:.66rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3)}
+.sub{font-size:.78rem;color:var(--tx2);margin-bottom:18px}
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* HERO */
+.hero{background:var(--sf);border:1px solid var(--dv);border-left:4px solid var(--cc,var(--tx3));border-radius:2px;padding:18px;margin-bottom:14px}
+.hero h1{font-family:'Merriweather',serif;font-size:1.5rem;line-height:1.3;margin:4px 0 4px}
+.hero h1.ld{color:var(--cc)}
+.hero .sub{margin:0}
 
-    :root {
-      --black: #0b0b0b;
-      --carbon-60: #58585b;
-      --carbon-40: #8e8e8e;
-      --carbon-20: #d9d9d9;
-      --carbon-05: #f5f5f5;
-      --white: #f7f5f4;
-      --blue: #1a5fa8;
-      --burg: #7d2040;
-      --orange: #c4601a;
-      --orange-dark: #a34e14;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
+/* STATS */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.st{background:var(--sf);border:1px solid var(--dv);border-radius:2px;padding:14px;min-height:78px}
+.st small{display:block;font-size:.64rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--tx3)}
+.st b{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.4}
+.st b.t{font-size:1.05rem;line-height:2}
+.sk{border-radius:2px;background:linear-gradient(90deg,var(--sf) 25%,var(--sf2) 50%,var(--sf) 75%);background-size:200%;animation:sh 1.2s infinite}
+.stats .sk{height:78px}
 
-    html { background: var(--black); }
+/* CARDS */
+.card{background:var(--sf);border:1px solid var(--dv);border-radius:2px;padding:18px;margin-bottom:14px}
+.card h2{font-family:'Merriweather',serif;font-size:1.05rem}
+.dn{position:relative;width:150px;height:150px;margin:0 auto 22px}
+.dn svg{width:150px;height:150px;transform:rotate(-90deg);display:block}
+.track,.seg{fill:none;stroke-width:14}
+.track{stroke:var(--dv)}
+.seg{transition:stroke-dasharray .9s cubic-bezier(.2,.8,.2,1)}
+.dc{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.dc b{font-size:1.8rem;font-weight:900;line-height:1}
+.dc small{font-size:.64rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--tx3)}
+.bar{margin-bottom:14px}
+.bar:last-child{margin-bottom:0}
+.bh{display:flex;align-items:center;gap:8px;font-size:.85rem;margin-bottom:6px}
+.bn{flex:1;font-family:'Merriweather',serif;font-weight:700}
+.bar.win .bn::after{content:" ★";color:var(--cc)}
+.bh b{font-variant-numeric:tabular-nums}
+.bh small{color:var(--tx3);width:36px;text-align:right}
+.bt{height:8px;background:var(--sf2);border-radius:4px;overflow:hidden}
+.bt i{display:block;height:100%;background:var(--cc);border-radius:4px;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bd{font-size:.66rem;font-weight:700;color:#fff;background:var(--cc);padding:2px 9px;border-radius:2px;min-width:26px;text-align:center}
 
-    body {
-      --page-bg: var(--white);
-      --surface-bg: #ffffff;
-      --surface-alt-bg: var(--carbon-05);
-      --text-primary: var(--black);
-      --text-secondary: var(--carbon-60);
-      --text-tertiary: var(--carbon-40);
-      --divider: var(--carbon-20);
-      --c1: #1a5fa8; --c2: #c4601a; --c3: #7d2040;
-      font-family: 'Inter', sans-serif; background: var(--page-bg); color: var(--text-primary); line-height: 1.6;
-      min-height: 100vh;
-      padding-bottom: calc(24px + var(--safe-bottom));
-      transition: background .2s ease, color .2s ease;
-    }
-    body.theme-dark {
-      --page-bg: #0e0e0e;
-      --surface-bg: #161616;
-      --surface-alt-bg: #1c1c1c;
-      --text-primary: var(--white);
-      --text-secondary: #b9b9bb;
-      --text-tertiary: #8e8e8e;
-      --divider: #2b2b2b;
-      --c1: #4f94d9; --c3: #c8587f;
-    }
-    button { font-family: inherit; }
+/* CHART */
+.chips{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
+.chips button{flex:none;padding:8px 14px;font-size:.78rem;font-weight:600;border:1px solid var(--dv);border-radius:20px;color:var(--tx2);background:var(--sf);transition:all .15s}
+.chips button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.chart{display:block;max-width:100%;height:auto;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.chart text{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;fill:var(--tx3)}
+.chart .gl{stroke:var(--dv);stroke-width:1}
+.chart .ln{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.chart .cl{stroke:var(--tx3);stroke-width:1;stroke-dasharray:3 3}
+.rd{font-size:.76rem;font-weight:600;color:var(--tx2);margin-top:12px}
+.leg{display:flex;gap:6px 16px;flex-wrap:wrap;margin-top:6px;font-size:.78rem;color:var(--tx2)}
+.leg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--cc);margin-right:6px}
+.leg b{color:var(--tx);font-variant-numeric:tabular-nums;margin-left:6px}
+.empty{text-align:center;color:var(--tx3);font-size:.85rem;padding:32px 0}
 
-    @keyframes pulse { 50% { opacity: .25; } }
-    @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-
-    /* COUNTDOWN BAR */
-    .countdown {
-      position: sticky; top: 0; z-index: 1000;
-      background: var(--orange); color: #fff;
-      padding: calc(var(--safe-top) + 10px) 20px 10px;
-      display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
-      text-align: center; transition: background .3s;
-    }
-    .countdown.closed { background: var(--burg); }
-    .cd-text { font-size: .74rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
-    .cd-time { font-size: 1.05rem; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: #fff; animation: pulse 1.6s infinite; }
-    .countdown.closed .dot { animation: none; }
-    .theme-btn {
-      position: absolute; right: 8px; top: calc(var(--safe-top) + 2px);
-      width: 44px; height: 44px; display: grid; place-items: center;
-      background: none; border: 0; color: #fff; cursor: pointer; border-radius: 50%;
-    }
-    .theme-btn:active { background: rgba(255,255,255,.2); }
-
-    /* HERO */
-    .hero { padding: 36px 40px 32px; border-bottom: 1px solid var(--divider); max-width: 760px; margin: 0 auto; }
-    .label-tag { font-size: .68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 6px; }
-    .hero-title { font-weight: 700; font-size: 1.7rem; line-height: 1.3; margin-bottom: 8px; }
-    .hero-title.t1 { color: var(--c1); } .hero-title.t2 { color: var(--c2); } .hero-title.t3 { color: var(--c3); }
-    .hero-dek { font-size: .95rem; color: var(--text-secondary); }
-
-    /* SECTIONS */
-    section.block { padding: 40px 40px; max-width: 760px; margin: 0 auto; }
-    section.block + section.block { padding-top: 0; }
-    .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
-    .section-sub { font-size: .82rem; color: var(--text-secondary); margin-bottom: 20px; }
-
-    /* CARD */
-    .panel { background: var(--surface-bg); border: 2px solid var(--divider); border-radius: 2px; padding: 20px 18px; animation: rise .4s ease both; }
-
-    /* DONUT */
-    .dn { position: relative; width: 170px; height: 170px; margin: 4px auto 24px; }
-    .dn svg { width: 170px; height: 170px; transform: rotate(-90deg); display: block; }
-    .track, .seg { fill: none; stroke-width: 14; }
-    .track { stroke: var(--divider); }
-    .seg { transition: stroke-dasharray .9s cubic-bezier(.2,.8,.2,1); }
-    .dc { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
-    .dc b { font-size: 2rem; font-weight: 900; line-height: 1; }
-    .dc small { font-size: .64rem; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-tertiary); }
-
-    /* BARS */
-    .bar { margin-bottom: 16px; }
-    .bar:last-child { margin-bottom: 0; }
-    .bh { display: flex; align-items: center; gap: 10px; font-size: .88rem; margin-bottom: 6px; }
-    .bn { flex: 1; font-family: 'Merriweather','Inter',serif; font-weight: 700; }
-    .bh small { color: var(--text-tertiary); width: 40px; text-align: right; font-size: .78rem; }
-    .bh b { font-variant-numeric: tabular-nums; }
-    .badge { font-size: .66rem; font-weight: 700; letter-spacing: 1.6px; color: #fff; padding: 3px 9px; border-radius: 2px; background: var(--cc); }
-    .bt { height: 10px; background: var(--surface-alt-bg); border-radius: 5px; overflow: hidden; }
-    .bt i { display: block; height: 100%; width: 0; background: var(--cc); border-radius: 5px; transition: width .9s cubic-bezier(.2,.8,.2,1); }
-    .bar.win .bn::after { content: " ★"; color: var(--cc); }
-
-    /* CHART */
-    .chart { width: 100%; height: auto; display: block; overflow: visible; }
-    .chart text { font-family: 'Inter', sans-serif; font-size: 10px; fill: var(--text-tertiary); }
-    .chart .gl { stroke: var(--divider); stroke-width: 1; }
-    .chart .ln { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
-    .leg { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; font-size: .76rem; color: var(--text-secondary); }
-    .leg span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--cc); margin-right: 6px; }
-    .peak { font-size: .82rem; color: var(--text-secondary); margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--divider); }
-    .empty { text-align: center; color: var(--text-tertiary); font-size: .85rem; padding: 24px 0; }
-
-    .msg { padding: 12px 14px; font-size: .82rem; border-radius: 2px; margin: 0 auto 16px; max-width: 680px; background: rgba(196,96,26,.12); color: var(--orange-dark); border: 1px solid var(--orange); }
-    body.theme-dark .msg { color: #f0a36b; }
-    .upd { font-size: .72rem; color: var(--text-tertiary); text-align: center; padding: 0 20px; }
-
-    @media (max-width: 640px) {
-      .hero { padding: 28px 20px 26px; }
-      .hero-title { font-size: 1.35rem; }
-      section.block { padding: 32px 20px; }
-    }
-    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
-  </style>
+/* STATES */
+.err{background:rgba(196,96,26,.12);border:1px solid var(--orange);border-radius:2px;padding:12px 14px;font-size:.82rem;color:var(--warn);margin-bottom:14px}
+.err .dbg{margin-top:6px;font-size:.74rem;word-break:break-word}
+.err button{margin-top:8px;padding:8px 14px;font-size:.78rem;font-weight:700;border:1px solid var(--warn);border-radius:2px}
+.fine{font-size:.72rem;color:var(--tx3);text-align:center;line-height:1.6}
+.upd{font-size:.72rem;color:var(--tx3);text-align:center;margin-top:4px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
-<script>
-  (function () {
-    var s = localStorage.getItem('mb_theme');
-    var dark = s ? s === 'theme-dark' : matchMedia('(prefers-color-scheme:dark)').matches;
-    document.body.classList.add(dark ? 'theme-dark' : 'theme-light');
-  })();
-</script>
+<script>try{document.body.classList.add(localStorage.getItem('mb_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'theme-dark':'theme-light'))}catch(e){document.body.classList.add('theme-light')}</script>
 
-<div class="countdown" id="countdown">
-  <i class="dot"></i>
-  <span class="cd-text" id="cdText">Voting closes in</span>
-  <span class="cd-time" id="cdTime">--:--:--</span>
-  <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle theme">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>
-  </button>
-</div>
-
-<div class="hero">
-  <p class="label-tag" id="tag">Student Vote · Finals</p>
-  <h1 class="hero-title" id="title">Loading results…</h1>
-  <p class="hero-dek" id="dek"></p>
-</div>
-
-<section class="block">
-  <h2 class="section-title">Votes by timetable</h2>
-  <p class="section-sub">Total counted votes for each option.</p>
-  <div class="panel">
-    <div class="dn"><svg viewBox="0 0 120 120" id="dsvg"></svg><div class="dc"><b id="tot">0</b><small>votes</small></div></div>
-    <div id="bars"></div>
+<header class="top">
+  <div><b>Finals vote · Results</b><div class="cd"><i class="dot"></i><span id="cd"></span></div></div>
+  <div class="ic">
+    <button id="rf" aria-label="Refresh"><svg class="i" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+    <button id="th" aria-label="Toggle theme"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" style="fill:currentColor"/></svg></button>
   </div>
-</section>
+</header>
 
-<section class="block">
-  <h2 class="section-title">Votes over time</h2>
-  <p class="section-sub">Cumulative votes for each timetable, hour by hour.</p>
-  <div class="panel">
+<main class="pane">
+  <section class="hero" id="hero"><div class="sk" style="height:84px"></div></section>
+  <div class="stats" id="stats"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+
+  <section class="card">
+    <h2>Votes by timetable</h2>
+    <p class="sub">Total counted votes for each option.</p>
+    <div id="tally"></div>
+  </section>
+
+  <section class="card">
+    <h2>Votes over time</h2>
+    <p class="sub">Tap or drag the chart to read any hour.</p>
+    <div class="chips" id="cm"><button class="on" data-m="cum">Running total</button><button data-m="hour">Per hour</button></div>
     <div id="chart"></div>
+    <p class="rd" id="rd"></p>
     <div class="leg" id="leg"></div>
-    <p class="peak" id="peak" hidden></p>
-  </div>
-</section>
+  </section>
 
-<div class="msg" id="err" hidden></div>
-<p class="upd" id="upd"></p>
+  <div class="err" id="err" hidden></div>
+  <p class="fine">Only vote totals are shown here. Names, ID numbers and photos stay private.</p>
+  <p class="upd" id="upd"></p>
+</main>
 
 <script>
-  /* ══ CONFIG ══ */
-  const FN_URL = 'https://igfooetzorzhhvpakgqa.supabase.co/functions/v1/vote-results';
-  const DEADLINE = new Date('2026-11-06T00:00:00+02:00').getTime();
-  const REFRESH_MS = 30000;
+/* ══ CONFIG ══ */
+const SB_URL='https://igfooetzorzhhvpakgqa.supabase.co';
+const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZm9vZXR6b3J6aGh2cGFrZ3FhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5ODg2NTksImV4cCI6MjEwNDU2NDY1OX0.1XLeeRi4KFJptk73JKx_vs0FlO5EXM17KIyFSaKWLCA'; // same public key as the voting page
+const DEADLINE=new Date('2026-11-06T00:00:00+02:00').getTime();
+const REFRESH_MS=20000;
 
-  const TT = { 1: { n: 'Timetable 1', c: 'var(--c1)' }, 2: { n: 'Timetable 2', c: 'var(--c2)' }, 3: { n: 'Timetable 3', c: 'var(--c3)' } };
-  const RAW = { 1: '#1a5fa8', 2: '#c4601a', 3: '#7d2040' };
-  const $ = (id) => document.getElementById(id);
-  const HR = 36e5;
-  const pad = (n) => String(n).padStart(2, '0');
-  const isClosed = () => Date.now() >= DEADLINE;
-  const fmtH = (t) => new Date(t).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-  let lastSig = '', data = null;
+const TT={1:{n:'Timetable 1'},2:{n:'Timetable 2'},3:{n:'Timetable 3'}};
+const $=id=>document.getElementById(id);
+const HR=36e5,pad=n=>String(n).padStart(2,'0');
+const DEBUG=/[?&]debug/.test(location.search);
+const isClosed=()=>Date.now()>=DEADLINE;
+const fmtT=t=>new Date(t).toLocaleString([],{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let P=null,lastSig='',mode='cum',CH=null,cKey='',loaded=false,wasClosed=null;
 
-  /* ══ COUNTDOWN ══ */
-  function tick() {
-    const left = DEADLINE - Date.now(), bar = $('countdown');
-    if (left <= 0) {
-      bar.classList.add('closed');
-      $('cdText').textContent = 'Voting has ended';
-      $('cdTime').textContent = '';
-      return;
-    }
-    bar.classList.remove('closed');
-    $('cdText').textContent = 'Voting closes in';
-    $('cdTime').textContent = pad(Math.floor(left / HR)) + ':' + pad(Math.floor(left % HR / 6e4)) + ':' + pad(Math.floor(left % 6e4 / 1e3));
-  }
+function up(el){const to=+el.dataset.n,t0=performance.now();(function f(t){const p=Math.min((t-t0)/700,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0)}
 
-  /* ══ DATA (no key needed) ══ */
-  async function fetchResults() {
-    const r = await fetch(FN_URL, { cache: 'no-store' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  }
+/* ══ COUNTDOWN ══ */
+function tick(){
+  const l=DEADLINE-Date.now(),closed=l<=0;
+  document.body.classList.toggle('closed',closed);
+  $('cd').textContent=closed?'Voting closed':'Closes in '+pad(Math.floor(l/HR))+':'+pad(Math.floor(l%HR/6e4))+':'+pad(Math.floor(l%6e4/1e3));
+  if(wasClosed!==closed){const first=wasClosed===null;wasClosed=closed;if(!first&&P)render()}
+}
 
-  /* ══ RENDER ══ */
-  function render(d) {
-    const cnt = { 1: +(d.totals[1] || 0), 2: +(d.totals[2] || 0), 3: +(d.totals[3] || 0) };
-    const n = cnt[1] + cnt[2] + cnt[3], mx = Math.max(cnt[1], cnt[2], cnt[3]);
-    const lead = [1, 2, 3].filter((k) => cnt[k] === mx && mx > 0);
-    const closed = isClosed(), sig = JSON.stringify(cnt), anim = sig !== lastSig;
-    lastSig = sig;
-
-    $('tag').textContent = closed ? 'Final result' : 'Live result';
-    const t = $('title');
-    if (!n) { t.className = 'hero-title'; t.textContent = 'No votes yet'; $('dek').textContent = 'Results will appear here as votes come in.'; }
-    else if (lead.length > 1) {
-      t.className = 'hero-title';
-      t.textContent = closed ? 'It’s a tie' : 'Currently tied';
-      $('dek').textContent = lead.map((k) => TT[k].n).join(' and ') + ' are level on ' + mx + ' vote' + (mx > 1 ? 's' : '') + ' each.';
-    } else {
-      const k = lead[0];
-      t.className = 'hero-title t' + k;
-      t.textContent = TT[k].n + (closed ? ' wins' : ' leads');
-      $('dek').textContent = mx + ' of ' + n + ' votes (' + Math.round(mx / n * 100) + '%)' + (closed ? '.' : ' so far.');
-    }
-
-    const C = 2 * Math.PI * 42; let acc = 0;
-    $('dsvg').innerHTML = '<circle class="track" cx="60" cy="60" r="42"/>' + [1, 2, 3].map((k) => {
-      const l = n ? cnt[k] / n * C : 0;
-      const s = `<circle class="seg" cx="60" cy="60" r="42" stroke="${RAW[k]}" data-l="${l}" style="stroke-dasharray:${anim ? 0 : l} ${anim ? C : C - l};stroke-dashoffset:${-acc}"/>`;
-      acc += l; return s;
-    }).join('');
-    $('tot').textContent = n;
-
-    $('bars').innerHTML = [1, 2, 3].map((k) => {
-      const p = n ? cnt[k] / n * 100 : 0;
-      return `<div class="bar${lead.length === 1 && lead[0] === k ? ' win' : ''}" style="--cc:${RAW[k]}"><div class="bh"><span class="badge">${k}</span><span class="bn">${TT[k].n}</span><b>${cnt[k]}</b><small>${p.toFixed(0)}%</small></div><div class="bt"><i data-w="${p}" style="width:${anim ? 0 : p}%"></i></div></div>`;
-    }).join('');
-    if (anim) requestAnimationFrame(() => requestAnimationFrame(() => {
-      document.querySelectorAll('.seg').forEach((s) => s.style.strokeDasharray = s.dataset.l + ' ' + (C - s.dataset.l));
-      document.querySelectorAll('.bt i').forEach((i) => i.style.width = i.dataset.w + '%');
-    }));
-
-    renderChart(d.timeline || []);
-    $('upd').textContent = 'Updated ' + new Date().toLocaleTimeString() + ' · refreshes automatically';
-  }
-
-  function renderChart(tl) {
-    const box = $('chart'), leg = $('leg'), pk = $('peak');
-    const per = { 1: {}, 2: {}, 3: {} }, hourTot = {}; let t0 = Infinity, t1 = -Infinity;
-    tl.forEach((x) => {
-      if (!(x.c in per)) return;
-      const t = new Date(x.h).getTime();
-      per[x.c][t] = (per[x.c][t] || 0) + x.n;
-      hourTot[t] = (hourTot[t] || 0) + x.n;
-      t0 = Math.min(t0, t); t1 = Math.max(t1, t);
-    });
-    if (t0 === Infinity) { box.innerHTML = '<p class="empty">The timeline will appear once votes are cast.</p>'; leg.innerHTML = ''; pk.hidden = true; return; }
-    if (t1 === t0) t0 -= HR;
-    const pts = []; for (let t = t0; t <= t1; t += HR) pts.push(t);
-    const cum = { 1: [], 2: [], 3: [] };
-    [1, 2, 3].forEach((k) => { let a = 0; pts.forEach((t) => { a += per[k][t] || 0; cum[k].push(a); }); });
-    const max = Math.max(1, ...[1, 2, 3].map((k) => cum[k][cum[k].length - 1]));
-    const W = 600, H = 220, L = 34, R = 10, Tp = 10, B = 26, iw = W - L - R, ih = H - Tp - B;
-    const X = (i) => L + (pts.length > 1 ? i / (pts.length - 1) : 0) * iw, Y = (v) => Tp + ih - (v / max) * ih;
-    let g = '';
-    for (let i = 0; i <= 4; i++) {
-      const v = Math.round(max * i / 4), y = Y(max * i / 4);
-      g += `<line class="gl" x1="${L}" x2="${W - R}" y1="${y}" y2="${y}"/><text x="${L - 6}" y="${y + 3}" text-anchor="end">${v}</text>`;
-    }
-    [[0, 'start'], [Math.floor((pts.length - 1) / 2), 'middle'], [pts.length - 1, 'end']].forEach(([i, a]) => {
-      g += `<text x="${X(i)}" y="${H - 8}" text-anchor="${a}">${fmtH(pts[i])}</text>`;
-    });
-    const lines = [1, 2, 3].map((k) => `<polyline class="ln" stroke="${RAW[k]}" points="${cum[k].map((v, i) => X(i).toFixed(1) + ',' + Y(v).toFixed(1)).join(' ')}"/>`).join('');
-    box.innerHTML = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Cumulative votes over time">${g}${lines}</svg>`;
-    leg.innerHTML = [1, 2, 3].map((k) => `<span style="--cc:${RAW[k]}">${TT[k].n}</span>`).join('');
-    const bt = Object.keys(hourTot).reduce((a, b) => hourTot[b] > hourTot[a] ? b : a);
-    pk.hidden = false;
-    pk.textContent = 'Busiest hour: ' + fmtH(+bt) + ' with ' + hourTot[bt] + ' vote' + (hourTot[bt] > 1 ? 's' : '') + '.';
-  }
-
-  async function refresh() {
-    try { data = await fetchResults(); $('err').hidden = true; render(data); }
-    catch (e) {
-      $('err').hidden = false;
-      $('err').textContent = 'Couldn’t load results. Retrying…';
-      if (!data) { $('title').textContent = 'Results unavailable'; $('dek').textContent = ''; }
-    }
-  }
-
-  /* ══ THEME + INIT ══ */
-  $('themeBtn').addEventListener('click', () => {
-    const d = document.body.classList.toggle('theme-dark');
-    document.body.classList.toggle('theme-light', !d);
-    localStorage.setItem('mb_theme', d ? 'theme-dark' : 'theme-light');
+/* ══ DATA ══ */
+async function fetchResults(){
+  let r;
+  try{r=await fetch(SB_URL+'/rest/v1/rpc/vote_results',{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json'},body:'{}',cache:'no-store'})}
+  catch(e){throw{kind:'net',msg:'Network error ('+(e.message||e)+')'}}
+  if(!r.ok){let j={};try{j=await r.json()}catch(e){}throw{kind:'http',status:r.status,code:j.code||'',msg:j.message||('HTTP '+r.status)}}
+  return r.json();
+}
+function parse(d){
+  const cnt={1:0,2:0,3:0},per={1:{},2:{},3:{}},hourTot={};let t0=Infinity,t1=-Infinity;
+  for(const k in (d.totals||{}))if(k in cnt)cnt[k]=+d.totals[k]||0;
+  (d.timeline||[]).forEach(x=>{
+    const c=String(x.c);if(!(c in per))return;
+    const t=Math.floor(new Date(x.h).getTime()/HR)*HR;if(isNaN(t))return;
+    const n=+x.n||0;per[c][t]=(per[c][t]||0)+n;hourTot[t]=(hourTot[t]||0)+n;
+    if(t<t0)t0=t;if(t>t1)t1=t;
   });
-  tick(); setInterval(tick, 1000);
-  refresh(); setInterval(() => { if (!document.hidden) refresh(); }, REFRESH_MS);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+  return{cnt,per,hourTot,t0,t1};
+}
+function hint(e){
+  if(e.code==='PGRST202'||e.status===404)return'The vote_results function doesn’t exist yet. Run the SQL setup in Supabase.';
+  if(e.status===401||e.status===403||e.code==='42501')return'The function isn’t shared with the public. Run the GRANT line from the SQL setup.';
+  return e.msg||'Unknown error';
+}
+
+/* ══ RENDER ══ */
+function render(){
+  const cnt=P.cnt,n=cnt[1]+cnt[2]+cnt[3],mx=Math.max(cnt[1],cnt[2],cnt[3]);
+  const lead=[1,2,3].filter(k=>cnt[k]===mx&&mx>0),closed=isClosed(),one=lead.length===1?lead[0]:0;
+  const sorted=[cnt[1],cnt[2],cnt[3]].sort((a,b)=>b-a),margin=sorted[0]-sorted[1];
+  const sig=JSON.stringify(cnt),anim=sig!==lastSig;lastSig=sig;
+
+  /* hero */
+  let title,dek;
+  if(!n){title=closed?'No votes were recorded':'No votes yet';dek='Results will appear here as votes come in.'}
+  else if(lead.length>1){title=closed?'It’s a tie':'Currently tied';dek=lead.map(k=>TT[k].n).join(' and ')+' are level on '+mx+' vote'+(mx>1?'s':'')+' each.'}
+  else{title=TT[one].n+(closed?' wins':' leads');dek=mx+' of '+n+' votes ('+Math.round(mx/n*100)+'%)'+(closed?'.':' so far.')}
+  const h=$('hero');h.style.setProperty('--cc',one?'var(--c'+one+')':'var(--tx3)');
+  h.innerHTML='<p class="tag">'+(closed?'Final result':'Live result')+'</p><h1 class="'+(one?'ld':'')+'">'+title+'</h1><p class="sub">'+dek+'</p>';
+
+  /* stats */
+  let bt=null;for(const t in P.hourTot)if(bt===null||P.hourTot[t]>P.hourTot[bt])bt=t;
+  const items=[['Total votes',n],['Status',closed?'Closed':'Live'],['Lead by',n&&margin>0?margin:(n?'Level':'—')],['Busiest hour',bt?fmtT(+bt):'—']];
+  $('stats').innerHTML=items.map(s=>typeof s[1]==='number'?`<div class="st"><small>${s[0]}</small><b data-n="${s[1]}">${s[1]}</b></div>`:`<div class="st"><small>${s[0]}</small><b class="t">${s[1]}</b></div>`).join('');
+
+  /* donut + bars */
+  const C=2*Math.PI*42;let acc=0;
+  const segs=[1,2,3].map(k=>{const l=n?cnt[k]/n*C:0,s=`<circle class="seg" cx="60" cy="60" r="42" data-l="${l}" style="stroke:var(--c${k});stroke-dasharray:${anim?0:l} ${anim?C:C-l};stroke-dashoffset:${-acc}"/>`;acc+=l;return s}).join('');
+  const bars=[1,2,3].map(k=>{const p=n?cnt[k]/n*100:0;return`<div class="bar${one===k?' win':''}" style="--cc:var(--c${k})"><div class="bh"><span class="bd">${k}</span><span class="bn">${TT[k].n}</span><b>${cnt[k]}</b><small>${p.toFixed(0)}%</small></div><div class="bt"><i data-w="${p}" style="width:${anim?0:p}%"></i></div></div>`}).join('');
+  $('tally').innerHTML=`<div class="dn"><svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="42"/>${segs}</svg><div class="dc"><b data-n="${n}">${n}</b><small>votes</small></div></div>${bars}`;
+  if(anim){
+    document.querySelectorAll('[data-n]').forEach(up);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      document.querySelectorAll('.seg').forEach(s=>s.style.strokeDasharray=s.dataset.l+' '+(C-s.dataset.l));
+      document.querySelectorAll('.bt i').forEach(i=>i.style.width=i.dataset.w+'%');
+    }));
+  }
+
+  drawChart(false);
+  $('upd').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · refreshes automatically';
+}
+
+/* ══ CHART (drawn at real pixel width so text stays readable) ══ */
+function drawChart(force){
+  const box=$('chart');
+  if(!P||P.t0===Infinity){box.innerHTML='<p class="empty">The timeline will appear once votes are cast.</p>';$('leg').innerHTML='';$('rd').textContent='';CH=null;cKey='';return}
+  const W=Math.max(box.clientWidth||300,240),H=210;
+  let t0=P.t0,t1=P.t1;
+  const end=Math.floor(Math.min(Date.now(),DEADLINE)/HR)*HR;
+  if(end>t1)t1=end;
+  if(t1-t0>1000*HR)t0=t1-1000*HR;
+  if(t1===t0)t0-=HR;
+  const key=JSON.stringify([P.per,mode,W,t1]);
+  if(!force&&key===cKey)return;cKey=key;
+
+  const pts=[];for(let t=t0;t<=t1;t+=HR)pts.push(t);
+  const S={1:[],2:[],3:[]};
+  [1,2,3].forEach(k=>{
+    let a=0;for(const t in P.per[k])if(+t<t0)a+=P.per[k][t];
+    pts.forEach(t=>{const v=P.per[k][t]||0;a+=v;S[k].push(mode==='cum'?a:v)});
+  });
+  let max=1;[1,2,3].forEach(k=>S[k].forEach(v=>{if(v>max)max=v}));
+  const step=Math.max(1,Math.ceil(max/4)),top=step*Math.ceil(max/step);
+  const L=30,R=14,Tp=12,B=26,iw=W-L-R,ih=H-Tp-B;
+  const X=i=>L+(pts.length>1?i/(pts.length-1):0)*iw,Y=v=>Tp+ih-v/top*ih;
+  const span=t1-t0;
+  const lab=t=>new Date(t).toLocaleString([],span>36*HR?{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}:{hour:'2-digit',minute:'2-digit'});
+
+  let g='';
+  for(let v=0;v<=top;v+=step){const y=Y(v);g+=`<line class="gl" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text x="${L-6}" y="${y+4}" text-anchor="end">${v}</text>`}
+  const nl=W<420?3:5;
+  const idx=[...new Set(Array.from({length:nl},(_,j)=>Math.round(j*(pts.length-1)/(nl-1))))];
+  idx.forEach((i,j)=>{g+=`<text x="${X(i)}" y="${H-8}" text-anchor="${j===0?'start':j===idx.length-1?'end':'middle'}">${lab(pts[i])}</text>`});
+  const lines=[1,2,3].map(k=>`<polyline class="ln" style="stroke:var(--c${k})" points="${S[k].map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ')}"/>`).join('');
+  const dots=[1,2,3].map(k=>`<circle id="dt${k}" r="4" style="fill:var(--c${k});display:none"/>`).join('');
+  box.innerHTML=`<svg class="chart" id="csvg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Votes over time by timetable">${g}${lines}<line id="cl" class="cl" y1="${Tp}" y2="${Tp+ih}" style="display:none"/>${dots}<rect id="chit" x="${L}" y="${Tp}" width="${iw}" height="${ih}" fill="transparent"/></svg>`;
+  $('leg').innerHTML=[1,2,3].map(k=>`<span style="--cc:var(--c${k})">${TT[k].n}<b id="lv${k}"></b></span>`).join('');
+  CH={pts,S,X,Y,W,L,iw,lab};
+  const hit=$('chit');
+  const at=e=>{const r=$('csvg').getBoundingClientRect(),x=(e.clientX-r.left)*(W/r.width);return Math.max(0,Math.min(pts.length-1,Math.round((x-L)/iw*(pts.length-1))))};
+  hit.addEventListener('pointerdown',e=>show(at(e),true));
+  hit.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.buttons)show(at(e),true)});
+  hit.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')show(pts.length-1,false)});
+  show(pts.length-1,false);
+}
+function show(i,cur){
+  const c=CH;if(!c)return;
+  $('rd').textContent=fmtT(c.pts[i])+(mode==='cum'?' · running total':' · votes in that hour');
+  [1,2,3].forEach(k=>{
+    $('lv'+k).textContent=c.S[k][i];
+    const d=$('dt'+k);d.style.display=cur?'':'none';
+    if(cur){d.setAttribute('cx',c.X(i));d.setAttribute('cy',c.Y(c.S[k][i]))}
+  });
+  const l=$('cl');l.style.display=cur?'':'none';
+  if(cur){l.setAttribute('x1',c.X(i));l.setAttribute('x2',c.X(i))}
+}
+
+/* ══ REFRESH + ERRORS ══ */
+function showErr(e){
+  const box=$('err');box.hidden=false;
+  box.innerHTML='<p><b>'+(loaded?'Couldn’t refresh.':'Results are unavailable right now.')+'</b> '+(loaded?'Showing the last known numbers.':'Please try again in a moment.')+'</p>'
+    +(DEBUG?'<p class="dbg">'+esc(hint(e))+' — '+esc(e.msg||'')+'</p>':'')+'<button id="retry" type="button">Try again</button>';
+  if(!loaded){$('hero').innerHTML='<p class="tag">Results</p><h1>Results unavailable</h1><p class="sub">We couldn’t reach the vote count.</p>';$('stats').innerHTML='';$('tally').innerHTML='<p class="empty">—</p>'}
+}
+async function refresh(){
+  const b=$('rf');b.classList.add('spin');
+  try{P=parse(await fetchResults());loaded=true;$('err').hidden=true;render()}
+  catch(e){console.error('vote_results failed',e);showErr(e)}
+  b.classList.remove('spin');
+}
+
+/* ══ EVENTS ══ */
+$('err').onclick=e=>{if(e.target.id==='retry')refresh()};
+$('rf').onclick=refresh;
+$('th').onclick=()=>{const d=document.body.classList.toggle('theme-dark');document.body.classList.toggle('theme-light',!d);try{localStorage.setItem('mb_theme',d?'theme-dark':'theme-light')}catch(e){}};
+$('cm').onclick=e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;document.querySelectorAll('#cm button').forEach(x=>x.classList.toggle('on',x===b));drawChart(true)};
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>drawChart(false),150)});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+
+tick();setInterval(tick,1000);
+refresh();setInterval(()=>{if(!document.hidden)refresh()},REFRESH_MS);
 </script>
 </body>
 </html>
