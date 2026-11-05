@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#c4601a" />
+<title>Finals Vote Results · MedicineBank Initiative</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Merriweather:wght@700&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--c2:#c4601a;--c3:#7d2040;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+body{--bg:#f7f5f4;--sf:#fff;--sf2:#f0eeed;--tx:#0b0b0b;--tx2:#58585b;--tx3:#8e8e8e;--dv:#d9d9d9;font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;min-height:100vh;padding-bottom:calc(32px + var(--sb));-webkit-tap-highlight-color:transparent}
+@media(prefers-color-scheme:dark){body{--bg:#0e0e0e;--sf:#161616;--sf2:#1f1f1f;--tx:#f7f5f4;--tx2:#b9b9bb;--dv:#2b2b2b}}
+svg{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pulse{50%{opacity:.25}}
+
+.top{background:var(--c2);color:#fff;padding:calc(var(--st) + 14px) 16px 14px;transition:background .3s}
+body.closed .top{background:var(--c3)}
+.top b{display:block;font-size:1rem}
+.cd{font-size:.74rem;font-weight:600;letter-spacing:.6px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px;margin-top:2px}
+.dot{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.6s infinite}
+body.closed .dot{animation:none}
+
+main{max-width:680px;margin:0 auto;padding:20px 16px}
+.card{background:var(--sf);border:1px solid var(--dv);border-radius:2px;padding:20px 18px;margin-bottom:14px;animation:rise .4s ease both}
+.tag{font-size:.66rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3)}
+.lead{font-family:'Merriweather',serif;font-size:1.6rem;line-height:1.25;margin:4px 0 4px}
+.lead.t1{color:#1a5fa8}.lead.t2{color:#c4601a}.lead.t3{color:#7d2040}
+@media(prefers-color-scheme:dark){.lead.t1{color:#6aa8e8}.lead.t3{color:#d77a9a}}
+.sub{font-size:.82rem;color:var(--tx2)}
+h2{font-family:'Merriweather',serif;font-size:1.05rem;margin-bottom:2px}
+
+.dn{position:relative;width:170px;height:170px;margin:18px auto 22px}
+.dn svg{width:170px;height:170px;transform:rotate(-90deg)}
+.track,.seg{fill:none;stroke-width:14}
+.track{stroke:var(--dv)}
+.seg{transition:stroke-dasharray .9s cubic-bezier(.2,.8,.2,1)}
+.dc{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.dc b{font-size:2rem;font-weight:900;line-height:1}
+.dc small{font-size:.64rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--tx3)}
+
+.bar{margin-bottom:14px}
+.bh{display:flex;align-items:center;gap:8px;font-size:.88rem;margin-bottom:6px}
+.bn{flex:1;font-family:'Merriweather',serif;font-weight:700}
+.bh small{color:var(--tx3);width:40px;text-align:right}
+.bd{font-size:.66rem;font-weight:700;color:#fff;background:var(--cc);padding:2px 9px;border-radius:2px;min-width:26px;text-align:center}
+.bt{height:10px;background:var(--sf2);border-radius:5px;overflow:hidden}
+.bt i{display:block;height:100%;width:0;background:var(--cc);border-radius:5px;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bar.win .bn::after{content:" ★";color:var(--cc)}
+
+.chart{margin-top:14px;width:100%;height:auto;overflow:visible}
+.chart text{font-family:'Inter',sans-serif;font-size:10px;fill:var(--tx3)}
+.chart .gl{stroke:var(--dv);stroke-width:1}
+.chart .ln{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:.76rem;color:var(--tx2)}
+.leg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--cc);margin-right:6px}
+.peak{font-size:.8rem;color:var(--tx2);margin-top:12px;padding-top:12px;border-top:1px solid var(--dv)}
+.empty{text-align:center;color:var(--tx3);font-size:.85rem;padding:24px 0}
+.upd{font-size:.72rem;color:var(--tx3);text-align:center;margin-top:6px}
+.err{font-size:.8rem;color:#a34e14;text-align:center;margin-top:8px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <b>MedicineBank Initiative · Finals vote</b>
+  <div class="cd"><i class="dot"></i><span id="cd"></span></div>
+</header>
+
+<main>
+  <section class="card" id="hero">
+    <p class="tag" id="htag">Results</p>
+    <p class="lead" id="hl">Loading…</p>
+    <p class="sub" id="hs"></p>
+  </section>
+
+  <section class="card">
+    <h2>Votes by timetable</h2>
+    <p class="sub">Total counted votes for each option.</p>
+    <div class="dn"><svg viewBox="0 0 120 120" id="dsvg"></svg><div class="dc"><b id="tot">0</b><small>votes</small></div></div>
+    <div id="bars"></div>
+  </section>
+
+  <section class="card">
+    <h2>Votes over time</h2>
+    <p class="sub">Cumulative votes for each timetable, hour by hour.</p>
+    <div id="chart"></div>
+    <div class="leg" id="leg"></div>
+    <p class="peak" id="peak" hidden></p>
+  </section>
+
+  <p class="err" id="err" hidden></p>
+  <p class="upd" id="upd"></p>
+</main>
+
+<script>
+/* ====== CONFIG ====== */
+const SB_URL='https://igfooetzorzhhvpakgqa.supabase.co';
+const ANON_KEY='PASTE_YOUR_ANON_PUBLIC_KEY_HERE'; // Supabase → Project Settings → API → anon public key
+const DEADLINE=new Date('2026-11-06T00:00:00+02:00').getTime();
+const REFRESH_MS=30000;
+/* ==================== */
+
+const TT={1:{n:'Timetable 1',c:'#1a5fa8'},2:{n:'Timetable 2',c:'#c4601a'},3:{n:'Timetable 3',c:'#7d2040'}};
+const $=id=>document.getElementById(id);
+const HR=36e5;
+let lastSig='',data=null;
+
+function tick(){
+  const l=DEADLINE-Date.now(),c=$('cd'),closed=l<=0;
+  document.body.classList.toggle('closed',closed);
+  if(closed){c.textContent='Voting closed';return}
+  const p=n=>String(n).padStart(2,'0');
+  c.textContent='Voting closes in '+p(Math.floor(l/HR))+':'+p(Math.floor(l%HR/6e4))+':'+p(Math.floor(l%6e4/1e3));
+}
+const isClosed=()=>Date.now()>=DEADLINE;
+const fmtH=t=>new Date(t).toLocaleString([],{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+
+async function fetchResults(){
+  const r=await fetch(SB_URL+'/rest/v1/rpc/vote_results',{method:'POST',headers:{'apikey':ANON_KEY,'Authorization':'Bearer '+ANON_KEY,'Content-Type':'application/json'},body:'{}'});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r.json();
+}
+
+function render(d){
+  const cnt={1:+(d.totals[1]||0),2:+(d.totals[2]||0),3:+(d.totals[3]||0)};
+  const n=cnt[1]+cnt[2]+cnt[3],mx=Math.max(cnt[1],cnt[2],cnt[3]);
+  const lead=[1,2,3].filter(k=>cnt[k]===mx&&mx>0);
+  const closed=isClosed(),sig=JSON.stringify(cnt),anim=sig!==lastSig;lastSig=sig;
+
+  /* hero */
+  $('htag').textContent=closed?'Final result':'Live result';
+  const hl=$('hl');
+  if(!n){hl.className='lead';hl.textContent='No votes yet';$('hs').textContent='Results will appear here as votes come in.'}
+  else if(lead.length>1){hl.className='lead';hl.textContent=closed?'It’s a tie':'Currently tied';$('hs').textContent=lead.map(k=>TT[k].n).join(' and ')+' are level on '+mx+' vote'+(mx>1?'s':'')+' each.'}
+  else{const k=lead[0];hl.className='lead t'+k;hl.textContent=TT[k].n+(closed?' wins':' leads');$('hs').textContent=mx+' of '+n+' votes ('+Math.round(mx/n*100)+'%)'+(closed?'.':' so far.')}
+
+  /* donut */
+  const C=2*Math.PI*42;let acc=0;
+  $('dsvg').innerHTML='<circle class="track" cx="60" cy="60" r="42"/>'+[1,2,3].map(k=>{const l=n?cnt[k]/n*C:0,s=`<circle class="seg" cx="60" cy="60" r="42" stroke="${TT[k].c}" data-l="${l}" style="stroke-dasharray:${anim?0:l} ${anim?C:C-l};stroke-dashoffset:${-acc}"/>`;acc+=l;return s}).join('');
+  $('tot').textContent=n;
+
+  /* bars */
+  $('bars').innerHTML=[1,2,3].map(k=>{const p=n?cnt[k]/n*100:0;return`<div class="bar${lead.length===1&&lead[0]==k?' win':''}" style="--cc:${TT[k].c}"><div class="bh"><span class="bd">${k}</span><span class="bn">${TT[k].n}</span><b>${cnt[k]}</b><small>${p.toFixed(0)}%</small></div><div class="bt"><i data-w="${p}" style="width:${anim?0:p}%"></i></div></div>`}).join('');
+  if(anim)requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    document.querySelectorAll('.seg').forEach(s=>s.style.strokeDasharray=s.dataset.l+' '+(C-s.dataset.l));
+    document.querySelectorAll('.bt i').forEach(i=>i.style.width=i.dataset.w+'%')}));
+
+  renderChart(d.timeline||[]);
+  $('upd').textContent='Updated '+new Date().toLocaleTimeString()+' · refreshes automatically';
+}
+
+function renderChart(tl){
+  const box=$('chart'),leg=$('leg'),pk=$('peak');
+  if(!tl.length){box.innerHTML='<p class="empty">The timeline will appear once votes are cast.</p>';leg.innerHTML='';pk.hidden=true;return}
+  const per={1:{},2:{},3:{}},hourTot={};let t0=Infinity,t1=-Infinity;
+  tl.forEach(x=>{const t=new Date(x.h).getTime();if(!(x.c in per))return;per[x.c][t]=(per[x.c][t]||0)+x.n;hourTot[t]=(hourTot[t]||0)+x.n;t0=Math.min(t0,t);t1=Math.max(t1,t)});
+  if(t0===Infinity){box.innerHTML='';return}
+  if(t1===t0){t0-=HR}
+  const pts=[];for(let t=t0;t<=t1;t+=HR)pts.push(t);
+  const cum={1:[],2:[],3:[]};
+  [1,2,3].forEach(k=>{let a=0;pts.forEach(t=>{a+=per[k][t]||0;cum[k].push(a)})});
+  const max=Math.max(1,...[1,2,3].map(k=>cum[k][cum[k].length-1]));
+  const W=600,H=220,L=34,R=10,Tp=10,B=26,iw=W-L-R,ih=H-Tp-B;
+  const X=i=>L+(pts.length>1?i/(pts.length-1):0)*iw,Y=v=>Tp+ih-(v/max)*ih;
+  let g='';
+  for(let i=0;i<=4;i++){const v=Math.round(max*i/4),y=Y(max*i/4);g+=`<line class="gl" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text x="${L-6}" y="${y+3}" text-anchor="end">${v}</text>`}
+  [[0,'start'],[Math.floor((pts.length-1)/2),'middle'],[pts.length-1,'end']].forEach(([i,a])=>{g+=`<text x="${X(i)}" y="${H-8}" text-anchor="${a}">${fmtH(pts[i])}</text>`});
+  const lines=[1,2,3].map(k=>`<polyline class="ln" stroke="${TT[k].c}" points="${cum[k].map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ')}"/>`).join('');
+  box.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Cumulative votes over time">${g}${lines}</svg>`;
+  leg.innerHTML=[1,2,3].map(k=>`<span style="--cc:${TT[k].c}">${TT[k].n}</span>`).join('');
+  const bt=Object.keys(hourTot).reduce((a,b)=>hourTot[b]>hourTot[a]?b:a);
+  pk.hidden=false;pk.textContent='Busiest hour: '+fmtH(+bt)+' with '+hourTot[bt]+' vote'+(hourTot[bt]>1?'s':'')+'.';
+}
+
+async function refresh(){
+  try{
+    data=await fetchResults();$('err').hidden=true;render(data);
+  }catch(e){
+    $('err').hidden=false;
+    $('err').textContent=ANON_KEY.startsWith('PASTE')?'Setup needed: add the anon key to the page.':'Couldn’t load results. Retrying…';
+    if(!data){$('hl').textContent='Results unavailable';$('hs').textContent=''}
+  }
+}
+tick();setInterval(tick,1000);
+refresh();setInterval(()=>{if(!document.hidden)refresh()},REFRESH_MS);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+</script>
+</body>
+</html>
