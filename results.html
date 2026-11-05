@@ -47,8 +47,8 @@ body.closed .dot{animation:none}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .st{background:var(--sf);border:1px solid var(--dv);border-radius:2px;padding:14px;min-height:78px}
 .st small{display:block;font-size:.64rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--tx3)}
-.st b{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.4}
-.st b.t{font-size:1.05rem;line-height:2}
+.st b{display:block;font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.4}
+.st .d{display:block;font-size:.7rem;color:var(--tx3);line-height:1.35}
 .sk{border-radius:2px;background:linear-gradient(90deg,var(--sf) 25%,var(--sf2) 50%,var(--sf) 75%);background-size:200%;animation:sh 1.2s infinite}
 .stats .sk{height:78px}
 
@@ -75,7 +75,7 @@ body.closed .dot{animation:none}
 .bd{font-size:.66rem;font-weight:700;color:#fff;background:var(--cc);padding:2px 9px;border-radius:2px;min-width:26px;text-align:center}
 
 /* CHART */
-.chips{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
+.chips{display:flex;gap:8px;overflow-x:auto;margin-bottom:10px;scrollbar-width:none}
 .chips button{flex:none;padding:8px 14px;font-size:.78rem;font-weight:600;border:1px solid var(--dv);border-radius:20px;color:var(--tx2);background:var(--sf);transition:all .15s}
 .chips button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
 .chart{display:block;max-width:100%;height:auto;touch-action:pan-y;user-select:none;-webkit-user-select:none}
@@ -120,9 +120,10 @@ body.closed .dot{animation:none}
   </section>
 
   <section class="card">
-    <h2>Votes over time</h2>
-    <p class="sub">Tap or drag the chart to read any hour.</p>
-    <div class="chips" id="cm"><button class="on" data-m="cum">Running total</button><button data-m="hour">Per hour</button></div>
+    <h2 id="ct">Votes per minute</h2>
+    <p class="sub">Tap or drag the chart to read any minute.</p>
+    <div class="chips" id="cm"><button class="on" data-m="min">Per minute</button><button data-m="cum">Running total</button></div>
+    <div class="chips" id="cr"><button class="on" data-r="60">Last hour</button><button data-r="360">Last 6 h</button><button data-r="all">All</button></div>
     <div id="chart"></div>
     <p class="rd" id="rd"></p>
     <div class="leg" id="leg"></div>
@@ -138,16 +139,20 @@ body.closed .dot{animation:none}
 const SB_URL='https://igfooetzorzhhvpakgqa.supabase.co';
 const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZm9vZXR6b3J6aGh2cGFrZ3FhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5ODg2NTksImV4cCI6MjEwNDU2NDY1OX0.1XLeeRi4KFJptk73JKx_vs0FlO5EXM17KIyFSaKWLCA'; // same public key as the voting page
 const DEADLINE=new Date('2026-11-06T00:00:00+02:00').getTime();
-const REFRESH_MS=20000;
+const REFRESH_MS=15000;
 
 const TT={1:{n:'Timetable 1'},2:{n:'Timetable 2'},3:{n:'Timetable 3'}};
 const $=id=>document.getElementById(id);
-const HR=36e5,pad=n=>String(n).padStart(2,'0');
+const MIN=6e4,HR=36e5,MAXSPAN=30*24*HR,pad=n=>String(n).padStart(2,'0');
 const DEBUG=/[?&]debug/.test(location.search);
 const isClosed=()=>Date.now()>=DEADLINE;
+const endMin=()=>Math.floor(Math.min(Date.now(),DEADLINE)/MIN)*MIN;
 const fmtT=t=>new Date(t).toLocaleString([],{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const hm=t=>new Date(t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+const tm=t=>new Date(t).toDateString()===new Date().toDateString()?hm(t):fmtT(t);
+const fr=v=>v===0?'0':v<0.1?'<0.1':String(parseFloat(v.toFixed(1)));
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let P=null,lastSig='',mode='cum',CH=null,cKey='',loaded=false,wasClosed=null;
+let P=null,lastSig='',mode='min',range='60',CH=null,cKey='',loaded=false,wasClosed=null;
 
 function up(el){const to=+el.dataset.n,t0=performance.now();(function f(t){const p=Math.min((t-t0)/700,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0)}
 
@@ -168,15 +173,15 @@ async function fetchResults(){
   return r.json();
 }
 function parse(d){
-  const cnt={1:0,2:0,3:0},per={1:{},2:{},3:{}},hourTot={};let t0=Infinity,t1=-Infinity;
+  const cnt={1:0,2:0,3:0},per={1:{},2:{},3:{}},minTot={};let t0=Infinity,t1=-Infinity,sum=0;
   for(const k in (d.totals||{}))if(k in cnt)cnt[k]=+d.totals[k]||0;
   (d.timeline||[]).forEach(x=>{
     const c=String(x.c);if(!(c in per))return;
-    const t=Math.floor(new Date(x.h).getTime()/HR)*HR;if(isNaN(t))return;
-    const n=+x.n||0;per[c][t]=(per[c][t]||0)+n;hourTot[t]=(hourTot[t]||0)+n;
+    const t=Math.floor(new Date(x.h).getTime()/MIN)*MIN;if(isNaN(t))return;
+    const n=+x.n||0;per[c][t]=(per[c][t]||0)+n;minTot[t]=(minTot[t]||0)+n;sum+=n;
     if(t<t0)t0=t;if(t>t1)t1=t;
   });
-  return{cnt,per,hourTot,t0,t1};
+  return{cnt,per,minTot,t0,t1,sum,old:d.bucket!=='minute'};
 }
 function hint(e){
   if(e.code==='PGRST202'||e.status===404)return'The vote_results function doesn’t exist yet. Run the SQL setup in Supabase.';
@@ -188,7 +193,6 @@ function hint(e){
 function render(){
   const cnt=P.cnt,n=cnt[1]+cnt[2]+cnt[3],mx=Math.max(cnt[1],cnt[2],cnt[3]);
   const lead=[1,2,3].filter(k=>cnt[k]===mx&&mx>0),closed=isClosed(),one=lead.length===1?lead[0]:0;
-  const sorted=[cnt[1],cnt[2],cnt[3]].sort((a,b)=>b-a),margin=sorted[0]-sorted[1];
   const sig=JSON.stringify(cnt),anim=sig!==lastSig;lastSig=sig;
 
   /* hero */
@@ -199,10 +203,18 @@ function render(){
   const h=$('hero');h.style.setProperty('--cc',one?'var(--c'+one+')':'var(--tx3)');
   h.innerHTML='<p class="tag">'+(closed?'Final result':'Live result')+'</p><h1 class="'+(one?'ld':'')+'">'+title+'</h1><p class="sub">'+dek+'</p>';
 
-  /* stats */
-  let bt=null;for(const t in P.hourTot)if(bt===null||P.hourTot[t]>P.hourTot[bt])bt=t;
-  const items=[['Total votes',n],['Status',closed?'Closed':'Live'],['Lead by',n&&margin>0?margin:(n?'Level':'—')],['Busiest hour',bt?fmtT(+bt):'—']];
-  $('stats').innerHTML=items.map(s=>typeof s[1]==='number'?`<div class="st"><small>${s[0]}</small><b data-n="${s[1]}">${s[1]}</b></div>`:`<div class="st"><small>${s[0]}</small><b class="t">${s[1]}</b></div>`).join('');
+  /* per-minute stats */
+  const end=endMin(),has=P.t0!==Infinity;
+  let ps=0;for(let j=1;j<=5;j++)ps+=P.minTot[end-j*MIN]||0;
+  const pace=ps/5,mins=has?Math.round((Math.max(P.t1,end)-P.t0)/MIN)+1:1,avg=P.sum/mins;
+  let bt=null;for(const t in P.minTot)if(bt===null||P.minTot[t]>P.minTot[bt])bt=t;
+  const items=[
+    {l:'Total votes',v:n,a:1},
+    {l:closed?'Closing pace':'Pace now',v:has?fr(pace):'—',d:'votes per min · last 5 min'},
+    {l:'Busiest minute',v:bt?P.minTot[bt]:'—',d:bt?'votes at '+tm(+bt):'votes in one minute'},
+    {l:'Overall average',v:has?fr(avg):'—',d:'votes per min since first vote'}
+  ];
+  $('stats').innerHTML=items.map(s=>`<div class="st"><small>${s.l}</small><b${s.a?' data-n="'+s.v+'"':''}>${s.v}</b>${s.d?'<span class="d">'+s.d+'</span>':''}</div>`).join('');
 
   /* donut + bars */
   const C=2*Math.PI*42;let acc=0;
@@ -218,59 +230,72 @@ function render(){
   }
 
   drawChart(false);
-  $('upd').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · refreshes automatically';
+  $('upd').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' · refreshes automatically';
 }
 
 /* ══ CHART (drawn at real pixel width so text stays readable) ══ */
 function drawChart(force){
   const box=$('chart');
-  if(!P||P.t0===Infinity){box.innerHTML='<p class="empty">The timeline will appear once votes are cast.</p>';$('leg').innerHTML='';$('rd').textContent='';CH=null;cKey='';return}
-  const W=Math.max(box.clientWidth||300,240),H=210;
-  let t0=P.t0,t1=P.t1;
-  const end=Math.floor(Math.min(Date.now(),DEADLINE)/HR)*HR;
-  if(end>t1)t1=end;
-  if(t1-t0>1000*HR)t0=t1-1000*HR;
-  if(t1===t0)t0-=HR;
-  const key=JSON.stringify([P.per,mode,W,t1]);
+  if(!P||P.t0===Infinity){box.innerHTML='<p class="empty">The chart will appear once votes are cast.</p>';$('leg').innerHTML='';$('rd').textContent='';CH=null;cKey='';return}
+  const W=Math.max(box.clientWidth||300,240),H=210,end=endMin();
+  const t1=Math.max(P.t1,end);
+  let t0=range==='all'?P.t0:t1-(+range-1)*MIN;
+  if(t1-t0>MAXSPAN)t0=t1-MAXSPAN;
+  if(t0>=t1)t0=t1-MIN;
+  const total=Math.round((t1-t0)/MIN)+1,bk=Math.max(1,Math.ceil(total/90)),nb=Math.ceil(total/bk);
+  const key=JSON.stringify([P.per,mode,range,W,t0,t1]);
   if(!force&&key===cKey)return;cKey=key;
 
-  const pts=[];for(let t=t0;t<=t1;t+=HR)pts.push(t);
+  const bm=i=>Math.min(bk,total-i*bk);
+  const bs=[];for(let i=0;i<nb;i++)bs.push(t0+i*bk*MIN);
   const S={1:[],2:[],3:[]};
   [1,2,3].forEach(k=>{
-    let a=0;for(const t in P.per[k])if(+t<t0)a+=P.per[k][t];
-    pts.forEach(t=>{const v=P.per[k][t]||0;a+=v;S[k].push(mode==='cum'?a:v)});
+    const a=new Array(nb).fill(0);let run=0;
+    for(const t in P.per[k]){
+      const tt=+t,v=P.per[k][t];
+      if(tt<t0)run+=v;
+      else{let i=Math.floor((tt-t0)/(bk*MIN));if(i>=nb)i=nb-1;a[i]+=v}
+    }
+    S[k]=a.map((v,i)=>{run+=v;return mode==='cum'?run:v/bm(i)});
   });
-  let max=1;[1,2,3].forEach(k=>S[k].forEach(v=>{if(v>max)max=v}));
-  const step=Math.max(1,Math.ceil(max/4)),top=step*Math.ceil(max/step);
-  const L=30,R=14,Tp=12,B=26,iw=W-L-R,ih=H-Tp-B;
-  const X=i=>L+(pts.length>1?i/(pts.length-1):0)*iw,Y=v=>Tp+ih-v/top*ih;
-  const span=t1-t0;
-  const lab=t=>new Date(t).toLocaleString([],span>36*HR?{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}:{hour:'2-digit',minute:'2-digit'});
+
+  let max=0;[1,2,3].forEach(k=>S[k].forEach(v=>{if(v>max)max=v}));
+  if(max<=0)max=1;
+  const integer=mode==='cum'||bk===1,raw=max/4,pw=Math.pow(10,Math.floor(Math.log10(raw)));
+  let step=[1,2,5,10].map(m=>m*pw).find(s=>s>=raw-1e-9);
+  if(integer)step=Math.max(1,step);
+  const top=step*Math.ceil(max/step-1e-9),rows=Math.round(top/step);
+  const dec=step>=1?0:Math.min(2,Math.ceil(-Math.log10(step)-1e-9));
+  const L=30+(dec?8:0),R=14,Tp=12,B=26,iw=W-L-R,ih=H-Tp-B;
+  const X=i=>L+(nb>1?i/(nb-1):0)*iw,Y=v=>Tp+ih-v/top*ih;
+  const lab=t=>new Date(t).toLocaleString([],(t1-t0)>30*HR?{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}:{hour:'2-digit',minute:'2-digit'});
 
   let g='';
-  for(let v=0;v<=top;v+=step){const y=Y(v);g+=`<line class="gl" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text x="${L-6}" y="${y+4}" text-anchor="end">${v}</text>`}
+  for(let j=0;j<=rows;j++){const v=j*step,y=Y(v);g+=`<line class="gl" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/><text x="${L-6}" y="${y+4}" text-anchor="end">${v.toFixed(dec)}</text>`}
   const nl=W<420?3:5;
-  const idx=[...new Set(Array.from({length:nl},(_,j)=>Math.round(j*(pts.length-1)/(nl-1))))];
-  idx.forEach((i,j)=>{g+=`<text x="${X(i)}" y="${H-8}" text-anchor="${j===0?'start':j===idx.length-1?'end':'middle'}">${lab(pts[i])}</text>`});
+  const idx=[...new Set(Array.from({length:nl},(_,j)=>Math.round(j*(nb-1)/(nl-1))))];
+  idx.forEach((i,j)=>{g+=`<text x="${X(i)}" y="${H-8}" text-anchor="${j===0?'start':j===idx.length-1?'end':'middle'}">${lab(bs[i])}</text>`});
   const lines=[1,2,3].map(k=>`<polyline class="ln" style="stroke:var(--c${k})" points="${S[k].map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ')}"/>`).join('');
   const dots=[1,2,3].map(k=>`<circle id="dt${k}" r="4" style="fill:var(--c${k});display:none"/>`).join('');
   box.innerHTML=`<svg class="chart" id="csvg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Votes over time by timetable">${g}${lines}<line id="cl" class="cl" y1="${Tp}" y2="${Tp+ih}" style="display:none"/>${dots}<rect id="chit" x="${L}" y="${Tp}" width="${iw}" height="${ih}" fill="transparent"/></svg>`;
   $('leg').innerHTML=[1,2,3].map(k=>`<span style="--cc:var(--c${k})">${TT[k].n}<b id="lv${k}"></b></span>`).join('');
-  CH={pts,S,X,Y,W,L,iw,lab};
+  CH={pts:bs,S,X,Y,bk,bm,end,lab};
   const hit=$('chit');
-  const at=e=>{const r=$('csvg').getBoundingClientRect(),x=(e.clientX-r.left)*(W/r.width);return Math.max(0,Math.min(pts.length-1,Math.round((x-L)/iw*(pts.length-1))))};
+  const at=e=>{const r=$('csvg').getBoundingClientRect(),x=(e.clientX-r.left)*(W/r.width);return Math.max(0,Math.min(nb-1,Math.round((x-L)/iw*(nb-1))))};
   hit.addEventListener('pointerdown',e=>show(at(e),true));
   hit.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.buttons)show(at(e),true)});
-  hit.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')show(pts.length-1,false)});
-  show(pts.length-1,false);
+  hit.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')show(nb-1,false)});
+  show(nb-1,false);
 }
 function show(i,cur){
   const c=CH;if(!c)return;
-  $('rd').textContent=fmtT(c.pts[i])+(mode==='cum'?' · running total':' · votes in that hour');
+  const s=c.pts[i],e=s+c.bm(i)*MIN,live=!isClosed()&&s<=c.end&&c.end<e;
+  $('rd').textContent=c.lab(s)+(c.bk>1?' – '+hm(e):'')+' · '+(mode==='cum'?'running total':c.bk>1?'average votes per minute':'votes in that minute')+(live?' · in progress':'');
   [1,2,3].forEach(k=>{
-    $('lv'+k).textContent=c.S[k][i];
+    const v=c.S[k][i];
+    $('lv'+k).textContent=(mode==='cum'||c.bk===1)?v:fr(v);
     const d=$('dt'+k);d.style.display=cur?'':'none';
-    if(cur){d.setAttribute('cx',c.X(i));d.setAttribute('cy',c.Y(c.S[k][i]))}
+    if(cur){d.setAttribute('cx',c.X(i));d.setAttribute('cy',c.Y(v))}
   });
   const l=$('cl');l.style.display=cur?'':'none';
   if(cur){l.setAttribute('x1',c.X(i));l.setAttribute('x2',c.X(i))}
@@ -285,7 +310,13 @@ function showErr(e){
 }
 async function refresh(){
   const b=$('rf');b.classList.add('spin');
-  try{P=parse(await fetchResults());loaded=true;$('err').hidden=true;render()}
+  try{
+    P=parse(await fetchResults());loaded=true;
+    const eb=$('err');
+    if(P.old){eb.hidden=false;eb.innerHTML='<p><b>Per-minute data needs the updated SQL.</b> Re-run the SQL setup in Supabase. Until then votes are grouped by hour.</p>'}
+    else eb.hidden=true;
+    render();
+  }
   catch(e){console.error('vote_results failed',e);showErr(e)}
   b.classList.remove('spin');
 }
@@ -294,7 +325,8 @@ async function refresh(){
 $('err').onclick=e=>{if(e.target.id==='retry')refresh()};
 $('rf').onclick=refresh;
 $('th').onclick=()=>{const d=document.body.classList.toggle('theme-dark');document.body.classList.toggle('theme-light',!d);try{localStorage.setItem('mb_theme',d?'theme-dark':'theme-light')}catch(e){}};
-$('cm').onclick=e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;document.querySelectorAll('#cm button').forEach(x=>x.classList.toggle('on',x===b));drawChart(true)};
+$('cm').onclick=e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;document.querySelectorAll('#cm button').forEach(x=>x.classList.toggle('on',x===b));$('ct').textContent=mode==='min'?'Votes per minute':'Running total';drawChart(true)};
+$('cr').onclick=e=>{const b=e.target.closest('button');if(!b)return;range=b.dataset.r;document.querySelectorAll('#cr button').forEach(x=>x.classList.toggle('on',x===b));drawChart(true)};
 let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>drawChart(false),150)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
 
