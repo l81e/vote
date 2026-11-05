@@ -1,553 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Finals Timetable Vote · MedicineBank Initiative</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex,nofollow" />
+<meta name="theme-color" content="#c4601a" />
+<title>ID Photo Review · MedicineBank Initiative</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Merriweather:wght@700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+:root{--c2:#c4601a;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+body{--bg:#f7f5f4;--sf:#fff;--sf2:#f5f5f5;--tx:#0b0b0b;--tx2:#58585b;--tx3:#8e8e8e;--dv:#d9d9d9;--warn:#a34e14;font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;min-height:100vh;padding-bottom:calc(32px + var(--sb));-webkit-tap-highlight-color:transparent;transition:background .2s,color .2s}
+body.theme-dark{--bg:#0e0e0e;--sf:#161616;--sf2:#1c1c1c;--tx:#f7f5f4;--tx2:#b9b9bb;--dv:#2b2b2b;--warn:#f0a36b}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  <meta name="theme-color" content="#0b0b0b" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+/* LOGIN */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:calc(24px + var(--st)) 20px 24px}
+.lcard{width:100%;max-width:400px;background:var(--sf);border:1px solid var(--dv);border-radius:4px;padding:28px 22px;animation:rise .5s cubic-bezier(.2,.8,.2,1)}
+.mark{width:46px;height:46px;border-radius:50%;background:var(--tx);color:var(--bg);display:grid;place-items:center;margin-bottom:16px}
+.mark svg{width:22px;height:22px}
+.tag{font-size:.66rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3)}
+h1{font-size:1.4rem;line-height:1.3;margin:4px 0 8px}
+.dek{font-size:.85rem;color:var(--tx2);margin-bottom:20px}
+label{display:block;font-size:.7rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--tx3);margin-bottom:6px}
+input[type=password],input[type=text],input[type=search]{width:100%;padding:13px 14px;font-size:16px;border:1px solid var(--dv);border-radius:2px;background:var(--bg);outline:none;-webkit-appearance:none;transition:border-color .15s}
+input:focus{border-color:var(--tx)}
+.chk{display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-weight:400;font-size:.8rem;color:var(--tx2);margin:14px 0}
+details{margin-bottom:14px;font-size:.8rem;color:var(--tx2)}
+summary{cursor:pointer;padding:6px 0}
+details .f{margin-top:8px}
+.err{color:var(--warn);font-size:.82rem;margin-bottom:12px}
+.btn{width:100%;padding:14px;font-weight:700;font-size:.9rem;border-radius:2px;background:var(--tx);color:var(--bg);transition:opacity .15s,transform .1s}
+.btn:active{transform:scale(.98)}.btn:disabled{opacity:.4}
+.fine{font-size:.72rem;color:var(--tx3);margin-top:14px;line-height:1.6}
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Merriweather:wght@300;700&display=swap" rel="stylesheet" />
+/* LIST */
+.top{position:sticky;top:0;z-index:20;background:var(--c2);color:#fff;padding:calc(var(--st) + 10px) 8px 10px 16px;display:flex;justify-content:space-between;align-items:center}
+.top b{display:block;font-size:.95rem}.top small{font-size:.72rem;opacity:.9}
+.ic{display:flex}
+.ic button{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;color:#fff}
+.ic button:active{background:rgba(255,255,255,.2)}
+.spin svg{animation:spin .8s linear infinite}
+.pane{max-width:760px;margin:0 auto;padding:16px}
+.pg{margin-bottom:14px}
+.pg p{display:flex;justify-content:space-between;font-size:.78rem;color:var(--tx2);margin-bottom:6px}
+.pt{height:6px;background:var(--dv);border-radius:3px;overflow:hidden}
+.pt i{display:block;height:100%;width:0;background:#2e7d4f;border-radius:3px;transition:width .5s}
+.sr{position:relative;margin-bottom:12px}
+.sr svg{position:absolute;left:13px;top:50%;margin-top:-9px;color:var(--tx3)}
+.sr input{padding-left:40px}
+.chips{display:flex;gap:8px;margin-bottom:12px}
+.chips button{padding:8px 14px;font-size:.78rem;font-weight:600;border:1px solid var(--dv);border-radius:20px;color:var(--tx2);background:var(--sf);transition:all .15s}
+.chips button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.cnt{font-size:.72rem;color:var(--tx3);margin-bottom:10px}
+.v{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:var(--sf);border:1px solid var(--dv);border-radius:2px;padding:12px 14px;margin-bottom:8px;min-height:64px;transition:transform .1s}
+.v.an{animation:rise .3s both}
+.v:active{transform:scale(.99)}
+.av{width:40px;height:40px;border-radius:50%;color:#fff;font-weight:700;display:grid;place-items:center;flex:none}
+.vi{flex:1;min-width:0}
+.vi b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vi small{color:var(--tx3);font-size:.74rem;font-variant-numeric:tabular-nums}
+.ck{width:24px;height:24px;border-radius:50%;border:2px solid var(--dv);display:grid;place-items:center;color:transparent;flex:none;transition:all .2s}
+.ck svg{width:13px;height:13px;stroke-width:3.5}
+.v.done .ck{background:#2e7d4f;border-color:#2e7d4f;color:#fff}
+.more{width:100%;padding:13px;border:1px solid var(--dv);font-weight:700;font-size:.85rem;border-radius:2px;background:var(--sf)}
+.empty{text-align:center;color:var(--tx3);font-size:.85rem;padding:40px 0}
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --black: #0b0b0b;
-      --carbon-90: #1a1a1a;
-      --carbon-80: #2b2b2b;
-      --carbon-60: #58585b;
-      --carbon-40: #8e8e8e;
-      --carbon-30: #b9b9bb;
-      --carbon-20: #d9d9d9;
-      --carbon-05: #f5f5f5;
-      --white: #f7f5f4;
-      --blue: #1a5fa8;
-      --champ: #b8973a;
-      --burg: #7d2040;
-      --orange: #c4601a;
-      --orange-dark: #a34e14;
-      --green: #2e7d4f;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    html { background: var(--black); }
-
-    body {
-      --page-bg: var(--white);
-      --surface-bg: #ffffff;
-      --surface-alt-bg: var(--carbon-05);
-      --text-primary: var(--black);
-      --text-secondary: var(--carbon-60);
-      --text-tertiary: var(--carbon-40);
-      --divider: var(--carbon-20);
-      font-family: 'Inter', sans-serif; background: var(--page-bg); color: var(--text-primary); line-height: 1.6;
-      touch-action: manipulation;
-      min-height: 100vh;
-      padding-bottom: calc(24px + var(--safe-bottom));
-      transition: background .2s ease, color .2s ease;
-    }
-    body.theme-dark {
-      --page-bg: #0e0e0e;
-      --surface-bg: #161616;
-      --surface-alt-bg: #1c1c1c;
-      --text-primary: var(--white);
-      --text-secondary: #b9b9bb;
-      --text-tertiary: #8e8e8e;
-      --divider: #2b2b2b;
-    }
-    a { color: inherit; text-decoration: none; }
-    button { font-family: inherit; }
-    input { font-family: inherit; }
-
-    /* COUNTDOWN BAR */
-    .countdown {
-      position: sticky; top: 0; z-index: 1000;
-      background: var(--orange); color: #fff;
-      padding: calc(var(--safe-top) + 10px) 20px 10px;
-      display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
-      text-align: center;
-    }
-    .countdown.closed { background: var(--burg); }
-    .cd-text { font-size: .74rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
-    .cd-time { font-size: 1.05rem; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
-
-    /* HERO */
-    .hero {
-      padding: 36px 40px 32px;
-      border-bottom: 1px solid var(--divider);
-      max-width: 760px; margin: 0 auto;
-    }
-    .label-tag { font-size: .68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 6px; }
-    .hero-title { font-weight: 700; font-size: 1.7rem; line-height: 1.3; margin-bottom: 8px; }
-    .hero-dek { font-size: .95rem; color: var(--text-secondary); }
-
-    /* SECTIONS */
-    section.block { padding: 40px 40px; max-width: 760px; margin: 0 auto; }
-    .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
-    .section-sub { font-size: .82rem; color: var(--text-secondary); margin-bottom: 20px; }
-    .step-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 22px; height: 22px; border-radius: 50%; background: var(--black); color: var(--white);
-      font-size: .72rem; font-weight: 700; margin-right: 8px; vertical-align: middle;
-    }
-    body.theme-dark .step-num { background: var(--white); color: var(--black); }
-
-    /* TIMETABLE CARDS */
-    .tt-grid { display: flex; flex-direction: column; gap: 16px; }
-    .tt-card {
-      background: var(--surface-bg); border: 2px solid var(--divider); border-radius: 2px;
-      cursor: pointer; transition: border-color .15s, background .15s; overflow: hidden;
-    }
-    .tt-card:hover { background: var(--surface-alt-bg); }
-    .tt-card.selected { border-color: var(--tt-color); }
-    .tt-head { padding: 16px 18px 12px; display: flex; align-items: center; gap: 12px; }
-    .tt-badge {
-      font-size: .66rem; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase;
-      color: #fff; padding: 3px 9px; border-radius: 2px; background: var(--tt-color);
-    }
-    .tt-name { font-family: 'Merriweather','Inter',serif; font-weight: 700; font-size: 1.05rem; flex: 1; }
-    .tt-check {
-      width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--divider); flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; color: transparent; transition: all .15s;
-    }
-    .tt-card.selected .tt-check { background: var(--tt-color); border-color: var(--tt-color); color: #fff; }
-    .tt-table { width: 100%; border-collapse: collapse; font-size: .84rem; }
-    .tt-table th {
-      text-align: left; padding: 8px 18px; font-size: .64rem; letter-spacing: 1.4px; text-transform: uppercase;
-      color: var(--text-tertiary); border-top: 1px solid var(--divider); background: var(--surface-alt-bg);
-    }
-    .tt-table td { padding: 9px 18px; border-top: 1px solid var(--divider); color: var(--text-primary); }
-    .tt-table td:first-child { font-weight: 600; white-space: nowrap; width: 90px; }
-
-    /* FORM */
-    .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 6px; }
-    .field input {
-      width: 100%; padding: 13px 14px; font-size: .92rem; border: 1px solid var(--divider);
-      border-radius: 2px; background: var(--surface-bg); color: var(--text-primary); outline: none;
-    }
-    .field input:focus { border-color: var(--text-primary); }
-
-    /* CAMERA / UPLOAD */
-    .cam-box {
-      background: var(--black); border-radius: 2px; overflow: hidden; position: relative;
-      aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center;
-    }
-    .cam-box video { width: 100%; height: 100%; object-fit: cover; display: none; }
-    .cam-box img { width: 100%; height: 100%; object-fit: contain; display: none; }
-    .cam-placeholder { color: var(--carbon-40); font-size: .82rem; text-align: center; padding: 20px; }
-    .cam-frame {
-      position: absolute; inset: 14% 10%; border: 2px dashed rgba(255,255,255,.55); border-radius: 6px; pointer-events: none; display: none;
-    }
-    .cam-actions { display: flex; gap: 10px; margin-top: 12px; }
-
-    .btn {
-      flex: 1; padding: 14px 18px; font-size: .88rem; font-weight: 700; border-radius: 2px; cursor: pointer;
-      border: 1px solid var(--text-primary); background: var(--text-primary); color: var(--page-bg);
-      transition: opacity .15s;
-    }
-    .btn:hover { opacity: .88; }
-    .btn.secondary { background: transparent; color: var(--text-primary); }
-    .btn:disabled { opacity: .4; cursor: not-allowed; }
-    .btn.full { width: 100%; flex: none; }
-
-    .consent { font-size: .74rem; color: var(--text-tertiary); line-height: 1.6; margin: 18px 0; }
-    .consent label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
-    .consent input { margin-top: 3px; }
-
-    .msg { padding: 12px 14px; font-size: .82rem; border-radius: 2px; margin-bottom: 16px; display: none; }
-    .msg.error { display: block; background: rgba(196,96,26,.12); color: var(--orange-dark); border: 1px solid var(--orange); }
-    body.theme-dark .msg.error { color: #f0a36b; }
-
-    /* DONE / CLOSED */
-    .done { text-align: center; padding: 80px 20px; }
-    .done-icon {
-      width: 64px; height: 64px; border-radius: 50%; background: var(--green); color: #fff;
-      display: flex; align-items: center; justify-content: center; margin: 0 auto 18px;
-    }
-    .done-icon.closed { background: var(--burg); }
-    .done h2 { font-family: 'Merriweather','Inter',serif; font-size: 1.3rem; margin-bottom: 8px; }
-    .done p { font-size: .88rem; color: var(--text-secondary); }
-
-    @media (max-width: 640px) {
-      .hero { padding: 28px 20px 26px; }
-      .hero-title { font-size: 1.35rem; }
-      section.block { padding: 32px 20px; }
-    }
-  </style>
+/* VIEWER */
+.vw{position:fixed;inset:0;z-index:60;background:#000;color:#fff;display:flex;flex-direction:column;height:100vh;height:100dvh;transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.vw.open{transform:none}
+.vh{display:flex;align-items:center;gap:10px;padding:calc(var(--st) + 8px) 16px 8px 6px;background:#111}
+.vin{flex:1;min-width:0}
+.vin b{display:block;font-family:'Merriweather',serif;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vin small{font-size:.74rem;color:#b9b9bb;font-variant-numeric:tabular-nums}
+.bd{font-size:.66rem;font-weight:700;color:#fff;padding:2px 9px;border-radius:2px;min-width:26px;text-align:center}
+.idr{display:flex;align-items:center;gap:10px;padding:0 16px 10px;background:#111;font-size:.74rem;color:#8e8e8e}
+.idr button{display:flex;gap:7px;align-items:center;padding:9px 12px;min-height:42px;border:1px solid #444;border-radius:2px;color:#fff;font-size:.82rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.stage{flex:1;position:relative;overflow:hidden;touch-action:none;background:#000;user-select:none;-webkit-user-select:none}
+.stage img{position:absolute;left:50%;top:50%;max-width:none;opacity:0;transform-origin:center;transition:opacity .25s;pointer-events:none;-webkit-user-drag:none}
+.stage img.rdy{opacity:1}
+.spn{position:absolute;left:50%;top:50%;margin:-14px 0 0 -14px;width:28px;height:28px;border:3px solid #444;border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+.verr{position:absolute;inset:0;overflow:auto;padding:24px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
+.verr h3{font-family:'Merriweather',serif;font-size:1rem}
+.verr pre{font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-all;text-align:left;background:#1a1a1a;padding:12px;border-radius:2px;max-width:100%;color:#f0a36b}
+.verr .btn{width:auto;padding:12px 26px;background:#fff;color:#000}
+.vb2{display:flex;justify-content:space-around;align-items:center;padding:10px 8px calc(10px + var(--sb));background:#111}
+.rb{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#fff;transition:transform .1s,background .15s;flex:none}
+.rb:active{transform:scale(.92)}
+.rb:disabled{opacity:.3}
+.rb.on{background:#2e7d4f}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
-<script>
-  (function () {
-    var s = localStorage.getItem('mb_theme');
-    document.body.classList.add(s === 'theme-dark' ? 'theme-dark' : 'theme-light');
-  })();
-</script>
+<script>document.body.classList.add(localStorage.getItem('mb_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'theme-dark':'theme-light'))</script>
 
-<div class="countdown" id="countdown">
-  <span class="cd-text" id="cdText">Voting ends tonight at 12:00 AM</span>
-  <span class="cd-time" id="cdTime">--:--:--</span>
-</div>
-
-<div id="votePage">
-  <div class="hero">
-    <p class="label-tag">Student Vote · Finals</p>
-    <h1 class="hero-title">Choose your finals timetable</h1>
-    <p class="hero-dek">Review the three timetables, pick one, and verify your identity. One vote per student.</p>
+<main class="login" id="login">
+  <div class="lcard">
+    <div class="mark"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M13 10h5M13 14h4"/></svg></div>
+    <p class="tag">Organisers only</p>
+    <h1>ID photo review</h1>
+    <p class="dek">Paste your service key to open voters’ ID photos one by one. If you ticked “Remember” on the dashboard, this page signs in by itself.</p>
+    <label for="key">Service key</label>
+    <input id="key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="eyJhbGciOi…" />
+    <label class="chk"><input type="checkbox" id="rem" /> Remember on this device</label>
+    <details>
+      <summary>Advanced</summary>
+      <div class="f"><label for="tbl">Votes table</label><input id="tbl" type="text" autocapitalize="off" /></div>
+      <div class="f"><label for="bkt">ID photo bucket</label><input id="bkt" type="text" autocapitalize="off" /></div>
+    </details>
+    <p class="err" id="lerr"></p>
+    <button class="btn" id="go" type="button">Open review page</button>
+    <p class="fine">Use this only on your own device. The service key bypasses all database security, so never share it.</p>
   </div>
+</main>
 
-  <section class="block">
-    <h2 class="section-title"><span class="step-num">1</span>Pick a timetable</h2>
-    <p class="section-sub">Tap a card to select it.</p>
-    <div class="tt-grid" id="ttGrid"></div>
-  </section>
-
-  <section class="block" style="padding-top:0;">
-    <h2 class="section-title"><span class="step-num">2</span>Your details</h2>
-    <p class="section-sub">Exactly as on your university ID.</p>
-    <div class="field"><label for="fullName">Full name</label><input id="fullName" type="text" autocomplete="name" /></div>
-    <div class="field"><label for="uniId">University ID number</label><input id="uniId" type="text" inputmode="numeric" autocomplete="off" /></div>
-  </section>
-
-  <section class="block" style="padding-top:0;">
-    <h2 class="section-title"><span class="step-num">3</span>Photo of your university ID</h2>
-    <p class="section-sub">Take a photo or upload an image. The ID text must be readable.</p>
-    <div class="cam-box" id="camBox">
-      <div class="cam-placeholder" id="camPlaceholder">No photo yet</div>
-      <video id="camVideo" autoplay playsinline muted></video>
-      <img id="camPreview" alt="ID photo preview" />
-      <div class="cam-frame" id="camFrame"></div>
+<div id="app" hidden>
+  <header class="top">
+    <div><b>ID photo review</b><small id="sub"></small></div>
+    <div class="ic">
+      <button id="rf" aria-label="Refresh"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.8-3.4L23 10M1 14l4.7 4.4A9 9 0 0 0 20.5 15"/></svg></button>
+      <button id="th" aria-label="Toggle theme"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" style="fill:currentColor"/></svg></button>
+      <button id="out" aria-label="Sign out"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
     </div>
-    <div class="cam-actions">
-      <button class="btn secondary" id="openCamBtn" type="button">Open camera</button>
-      <button class="btn" id="captureBtn" type="button" style="display:none;">Capture</button>
-      <button class="btn secondary" id="retakeBtn" type="button" style="display:none;">Retake</button>
-      <button class="btn secondary" id="uploadBtn" type="button">Upload image</button>
-    </div>
-    <input type="file" id="fileInput" accept="image/*" style="display:none;" />
-    <canvas id="camCanvas" style="display:none;"></canvas>
-  </section>
-
-  <section class="block" style="padding-top:0;">
-    <div class="msg" id="errMsg"></div>
-    <div class="consent">
-      <label>
-        <input type="checkbox" id="consentChk" />
-        <span>I confirm this is my own ID and I am voting once. I agree that my name, ID number, ID photo and IP address are recorded to verify my vote and prevent duplicate voting.</span>
-      </label>
-    </div>
-    <button class="btn full" id="submitBtn" type="button">Submit my vote</button>
+  </header>
+  <section class="pane">
+    <div class="pg"><p id="pgt"></p><div class="pt"><i id="pgb"></i></div></div>
+    <div class="sr"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="q" type="search" placeholder="Search name or ID" autocomplete="off" /></div>
+    <div class="chips" id="chips"><button class="on" data-c="all">All</button><button data-c="todo">To review</button><button data-c="done">Checked</button></div>
+    <div id="vl"></div>
+    <button class="more" id="more" hidden>Show more</button>
   </section>
 </div>
 
-<div id="donePage" style="display:none;">
-  <div class="done">
-    <div class="done-icon" id="doneIcon">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+<div class="vw" id="vw" hidden>
+  <header class="vh">
+    <button class="rb" id="vx" aria-label="Close" style="background:none"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <div class="vin"><b id="vn"></b><small id="vt"></small></div>
+    <span class="bd" id="vb"></span>
+  </header>
+  <div class="idr"><button id="vidb"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg><span id="vid"></span></button><span>Tap to show the ID number</span></div>
+  <div class="stage" id="stage">
+    <img id="im" alt="Student ID photo" />
+    <i class="spn" id="sp"></i>
+    <div class="verr" id="verr" hidden>
+      <svg viewBox="0 0 24 24" style="width:34px;height:34px;color:#f0a36b"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <h3>Couldn’t load this photo</h3>
+      <pre id="ed"></pre>
+      <button class="btn" id="retry">Try again</button>
     </div>
-    <h2 id="doneTitle">Your vote is in</h2>
-    <p id="doneText">Thank you for taking part.</p>
+  </div>
+  <div class="vb2">
+    <button class="rb" id="pv" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="rb" id="zo" aria-label="Zoom out"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6"/></svg></button>
+    <button class="rb" id="zi" aria-label="Zoom in"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg></button>
+    <button class="rb" id="rt" aria-label="Rotate"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg></button>
+    <button class="rb" id="ckb" aria-label="Mark as checked"><svg viewBox="0 0 24 24" style="stroke-width:3"><path d="M20 6L9 17l-5-5"/></svg></button>
+    <button class="rb" id="nx" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
   </div>
 </div>
 
 <script>
-  /* ══ CONFIG ══ */
-  const SUPABASE_URL = 'https://igfooetzorzhhvpakgqa.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZm9vZXR6b3J6aGh2cGFrZ3FhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5ODg2NTksImV4cCI6MjEwNDU2NDY1OX0.1XLeeRi4KFJptk73JKx_vs0FlO5EXM17KIyFSaKWLCA';
-  const BUCKET = 'vote-ids';
+const SB_URL='https://igfooetzorzhhvpakgqa.supabase.co';
+const TT={1:'#1a5fa8',2:'#c4601a',3:'#7d2040'};
+const COLS={name:['name','full_name','voter_name'],uid:['uid','uni_id','university_id','student_id'],choice:['choice','timetable','vote'],photo:['photo','photo_path','id_photo','photo_url','id_photo_path','id_image','image','id_card'],time:['created_at','voted_at','inserted_at']};
+const IMG=/\.(jpe?g|png|webp|gif|heic)(\?|$)/i;
+const CK='<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mask=s=>'•'.repeat(Math.max(s.length-3,3))+s.slice(-3);
+const fmt=t=>t?new Date(t).toLocaleString([],{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—';
+const role=k=>{try{return JSON.parse(atob(k.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))).role}catch(e){return null}};
+const bucket=()=>$('bkt').value.trim()||'vote-ids';
+let sb,rows=[],list=[],pcol=null,Q={c:'all',q:''},shown=60,chk={},T,idT,V={L:[],i:0,s:1,x:0,y:0,r:0,tok:0,blob:null};
+try{chk=JSON.parse(localStorage.getItem('mbr_chk')||'{}')}catch(e){}
 
-  // Voting ends at 12:00 AM (midnight) tonight, Cairo time (UTC+2)
-  const DEADLINE = new Date('2026-11-06T00:00:00+02:00').getTime();
-  const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+function errText(x){
+  const m=(x&&(x.message||x.msg))||'';
+  if(/schema cache|does not exist|PGRST205/.test(m+(x.code||'')))return'Table “'+($('tbl').value.trim()||'votes')+'” wasn’t found. Check the table name under Advanced.';
+  if(/invalid api key|jwt|401|unauthor/i.test(m))return'The key was rejected. Use the legacy service_role key (starts with eyJ).';
+  return'Couldn’t load votes: '+(m||'check your connection.');
+}
 
-  const TIMETABLES = [
-    {
-      key: '1', name: 'Timetable 1', color: '#1a5fa8',
-      rows: [
-        ['19/12', 'Final Renal'],
-        ['22/12', 'OSPE Renal'],
-        ['28/12', 'Final RESP'],
-        ['31/12', 'OSPE RESP'],
-        ['3/1',   'Final ECE + Elective'],
-        ['5/1',   'OSPE ECE'],
-        ['13/1',  'Final CVS'],
-        ['17/1',  'OSPE CVS'],
-      ],
-    },
-    {
-      key: '2', name: 'Timetable 2', color: '#c4601a',
-      rows: [
-        ['19/12', 'Elective'],
-        ['22/12', 'Final CVS'],
-        ['26/12', 'OSPE CVS'],
-        ['31/12', 'Final Renal'],
-        ['3/1',   'OSPE Renal'],
-        ['10/1',  'Final Resp'],
-        ['13/1',  'OSPE Resp'],
-        ['17/1',  'ECE Final & OSPE'],
-      ],
-    },
-    {
-      key: '3', name: 'Timetable 3', color: '#7d2040',
-      rows: [
-        ['22/12', 'Final CVS'],
-        ['26/12', 'OSPE CVS'],
-        ['31/12', 'Final Renal'],
-        ['3/1',   'OSPE Renal'],
-        ['5/1',   'Elective'],
-        ['10/1',  'Final Resp'],
-        ['13/1',  'OSPE Resp'],
-        ['17/1',  'ECE Final & OSPE'],
-      ],
-    },
-  ];
-
-  /* ══ HELPERS ══ */
-  const $ = (id) => document.getElementById(id);
-  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-  let sb = null;
-  function client() {
-    if (!sb && window.supabase) sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    return sb;
+/* DATA */
+async function load(){
+  const t=$('tbl').value.trim()||'votes';let all=[],from=0;
+  for(;;){const{data,error}=await sb.from(t).select('*').range(from,from+999);if(error)throw error;all=all.concat(data);if(data.length<1000)break;from+=1000}
+  const M={};
+  if(all.length){
+    for(const k in COLS)M[k]=COLS[k].find(c=>c in all[0])||null;
+    if(!M.photo)M.photo=Object.keys(all[0]).find(k=>all.some(r=>typeof r[k]==='string'&&IMG.test(r[k])))||null;
   }
+  pcol=M.photo;
+  rows=all.map(r=>{const o={name:String(r[M.name]??''),uid:String(r[M.uid]??''),c:(String(r[M.choice]??'').match(/\d/)||[''])[0],photo:M.photo?String(r[M.photo]||''):'',t:M.time?new Date(r[M.time]).getTime()||0:0};o.k=o.uid.toLowerCase()+'|'+o.t;return o});
+  rows.sort((a,b)=>b.t-a.t);
+  $('sub').textContent=rows.length+' votes';
+  renderList();
+}
+function renderList(a){
+  const q=Q.q.toLowerCase();
+  list=rows.filter(r=>(Q.c==='all'||(Q.c==='todo'?!chk[r.k]:!!chk[r.k]))&&(!q||r.name.toLowerCase().includes(q)||r.uid.toLowerCase().includes(q)));
+  const done=rows.filter(r=>chk[r.k]).length,p=rows.length?done/rows.length*100:0;
+  $('pgt').innerHTML='<span>'+done+' of '+rows.length+' checked</span><span>'+Math.round(p)+'%</span>';
+  $('pgb').style.width=p+'%';
+  $('vl').innerHTML=list.slice(0,shown).map((r,i)=>`<button class="v${chk[r.k]?' done':''}${a?' an':''}" data-i="${i}" style="animation-delay:${Math.min(i,10)*25}ms"><span class="av" style="background:${TT[r.c]||'#8e8e8e'}">${esc((r.name.trim()[0]||'?').toUpperCase())}</span><span class="vi"><b>${esc(r.name)||'Unnamed'}</b><small>${fmt(r.t)} · ${esc(mask(r.uid))}</small></span><span class="ck">${CK}</span></button>`).join('')||'<p class="empty">No matching votes.</p>';
+  $('more').hidden=list.length<=shown;
+}
 
-  function deviceId() {
-    let id = localStorage.getItem('mb_vote_device');
-    if (!id) {
-      id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
-      localStorage.setItem('mb_vote_device', id);
-    }
-    return id;
-  }
-
-  function showError(t) { const e = $('errMsg'); e.textContent = t; e.className = 'msg error'; e.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-  function clearError() { $('errMsg').className = 'msg'; }
-
-  function showDone(text) {
-    $('votePage').style.display = 'none';
-    $('donePage').style.display = 'block';
-    if (text) $('doneText').textContent = text;
-    stopCamera();
-    window.scrollTo({ top: 0 });
-  }
-
-  /* ══ COUNTDOWN ══ */
-  let votingClosed = false;
-  function pad(n) { return String(n).padStart(2, '0'); }
-
-  function closeVoting() {
-    if (votingClosed) return;
-    votingClosed = true;
-    $('countdown').classList.add('closed');
-    $('cdText').textContent = 'Voting has ended';
-    $('cdTime').textContent = '';
-    if (localStorage.getItem('mb_voted') !== '1') {
-      $('doneIcon').classList.add('closed');
-      $('doneIcon').innerHTML = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-      $('doneTitle').textContent = 'Voting has ended';
-      showDone('The voting window closed at 12:00 AM. Thank you for your interest.');
+/* PHOTO LOADING */
+function cleanPath(p){
+  if(!p)return'';
+  const m=p.match(/\/object\/(?:public|sign|authenticated)\/[^/]+\/([^?]+)/);
+  if(m){try{return decodeURIComponent(m[1])}catch(e){return m[1]}}
+  if(/^https?:/i.test(p))return'';
+  p=p.replace(/^\/+/,'');const b=bucket();
+  return p.startsWith(b+'/')?p.slice(b.length+1):p;
+}
+async function fetchPhoto(r){
+  const st=sb.storage.from(bucket()),tried=new Set();
+  const stored=cleanPath(r.photo);
+  const log=['Photo column: '+(pcol||'not found'),'Bucket: '+bucket(),'Stored path: '+(stored||'none')];
+  const attempt=async p=>{
+    if(!p||tried.has(p))return null;tried.add(p);
+    const d=await st.download(p);
+    if(!d.error&&d.data)return{blob:d.data};
+    log.push('Download failed ('+p+'): '+((d.error&&(d.error.message||d.error.name))||'empty'));
+    const s=await st.createSignedUrl(p,120);
+    if(!s.error&&s.data)return{url:s.data.signedUrl};
+    log.push('Signed link failed: '+((s.error&&s.error.message)||'no link'));
+    return null;
+  };
+  let res=await attempt(stored);
+  if(res)return res;
+  const pre=r.uid.toLowerCase().replace(/[^a-z0-9]/g,'');
+  if(pre){
+    const l=await st.list('',{limit:100,search:pre});
+    if(l.error)log.push('Bucket search failed: '+l.error.message);
+    else{
+      const f=(l.data||[]).filter(x=>x.name.startsWith(pre+'_')).sort((a,b)=>b.name.localeCompare(a.name));
+      log.push('Files found for this ID: '+f.length);
+      for(const x of f){res=await attempt(x.name);if(res)return res}
     }
   }
+  return{fail:log};
+}
 
-  function tick() {
-    const left = DEADLINE - Date.now();
-    if (left <= 0) { closeVoting(); return; }
-    const h = Math.floor(left / 3600000);
-    const m = Math.floor((left % 3600000) / 60000);
-    const s = Math.floor((left % 60000) / 1000);
-    $('cdTime').textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
-  }
+/* VIEWER */
+const im=$('im'),stage=$('stage');
+function apply(){
+  const w=im.naturalWidth,h=im.naturalHeight;if(!w)return;
+  const W=stage.clientWidth,H=stage.clientHeight,sw=V.r%180?h:w,sh=V.r%180?w:h,base=Math.min(W/sw,H/sh);
+  im.style.cssText='width:'+w+'px;height:'+h+'px;margin:'+(-h/2)+'px 0 0 '+(-w/2)+'px;transform:translate('+V.x+'px,'+V.y+'px) rotate('+V.r+'deg) scale('+base*V.s+')';
+}
+function setZoom(s){V.s=Math.min(6,Math.max(1,s));if(V.s===1){V.x=V.y=0}}
+function setId(on){
+  clearTimeout(idT);const r=V.L[V.i];if(!r)return;
+  $('vid').textContent=on?r.uid:mask(r.uid);
+  if(on)idT=setTimeout(()=>setId(false),8000);
+}
+function ck(){$('ckb').classList.toggle('on',!!chk[V.L[V.i].k])}
+function fail(log){$('sp').hidden=true;$('ed').textContent=log.join('\n');$('verr').hidden=false}
+async function show(){
+  const r=V.L[V.i],tok=++V.tok;
+  $('vn').textContent=r.name||'Unnamed';
+  $('vb').textContent=r.c||'?';$('vb').style.background=TT[r.c]||'#8e8e8e';
+  $('vt').textContent=fmt(r.t)+' · '+(V.i+1)+' of '+V.L.length;
+  setId(false);ck();
+  im.classList.remove('rdy');im.removeAttribute('src');
+  if(V.blob){URL.revokeObjectURL(V.blob);V.blob=null}
+  $('verr').hidden=true;$('sp').hidden=false;
+  V.s=1;V.x=V.y=V.r=0;
+  $('pv').disabled=V.i<=0;$('nx').disabled=V.i>=V.L.length-1;
+  const res=await fetchPhoto(r);
+  if(tok!==V.tok)return;
+  if(res.fail){fail(res.fail);return}
+  if(res.blob)V.blob=URL.createObjectURL(res.blob);
+  im.src=V.blob||res.url;
+}
+im.onload=()=>{$('sp').hidden=true;im.classList.add('rdy');apply()};
+im.onerror=()=>{if(im.getAttribute('src'))fail(['The photo was found, but this browser can’t display it (it may be a HEIC file).'])};
+function openV(i){V.L=list.slice();V.i=i;const v=$('vw');v.hidden=false;void v.offsetWidth;v.classList.add('open');show()}
+function closeV(){V.tok++;clearTimeout(idT);$('vw').classList.remove('open');setTimeout(()=>{$('vw').hidden=true;im.removeAttribute('src');if(V.blob){URL.revokeObjectURL(V.blob);V.blob=null}},300)}
+function go(d){const n=V.i+d;if(n<0||n>=V.L.length)return;V.i=n;show()}
 
-  /* ══ TIMETABLES ══ */
-  let selected = null;
-  function renderTimetables() {
-    $('ttGrid').innerHTML = TIMETABLES.map(t => (
-      '<div class="tt-card" data-key="' + t.key + '" style="--tt-color:' + t.color + ';">' +
-        '<div class="tt-head">' +
-          '<span class="tt-badge">' + escHtml(t.key) + '</span>' +
-          '<span class="tt-name">' + escHtml(t.name) + '</span>' +
-          '<span class="tt-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></span>' +
-        '</div>' +
-        '<table class="tt-table"><thead><tr><th>Date</th><th>Exam</th></tr></thead><tbody>' +
-          t.rows.map(r => '<tr><td>' + escHtml(r[0]) + '</td><td>' + escHtml(r[1]) + '</td></tr>').join('') +
-        '</tbody></table>' +
-      '</div>'
-    )).join('');
-    document.querySelectorAll('.tt-card').forEach(card => {
-      card.addEventListener('click', () => {
-        selected = card.dataset.key;
-        document.querySelectorAll('.tt-card').forEach(c => c.classList.toggle('selected', c === card));
-      });
-    });
-  }
+/* GESTURES */
+const P=new Map();let pd=0,sx=0,sy=0,moved=0,lt=0;
+const dist=()=>{const a=[...P.values()];return a.length>1?Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y):0};
+stage.addEventListener('pointerdown',e=>{
+  if(e.target.closest('.verr'))return;
+  stage.setPointerCapture(e.pointerId);P.set(e.pointerId,{x:e.clientX,y:e.clientY});pd=dist();
+  if(P.size===1){sx=e.clientX;sy=e.clientY;moved=0}
+});
+stage.addEventListener('pointermove',e=>{
+  const p=P.get(e.pointerId);if(!p)return;
+  const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
+  if(P.size===1){moved+=Math.abs(dx)+Math.abs(dy);if(V.s>1){V.x+=dx;V.y+=dy;apply()}}
+  else if(P.size===2){moved=99;const d=dist();if(pd)setZoom(V.s*d/pd);pd=d;apply()}
+});
+function up(e){
+  if(!P.has(e.pointerId))return;
+  const single=P.size===1;P.delete(e.pointerId);pd=dist();
+  if(!single||e.type==='pointercancel')return;
+  const tx=e.clientX-sx,ty=e.clientY-sy;
+  if(V.s===1&&Math.abs(tx)>70&&Math.abs(ty)<60){go(tx<0?1:-1);return}
+  if(moved<8){const n=Date.now();if(n-lt<300){setZoom(V.s>1?1:2.5);apply();lt=0}else lt=n}
+}
+stage.addEventListener('pointerup',up);
+stage.addEventListener('pointercancel',up);
+stage.addEventListener('wheel',e=>{e.preventDefault();setZoom(V.s*(e.deltaY<0?1.15:.87));apply()},{passive:false});
+addEventListener('resize',apply);
+document.addEventListener('keydown',e=>{
+  if($('vw').hidden)return;
+  if(e.key==='Escape')closeV();else if(e.key==='ArrowLeft')go(-1);else if(e.key==='ArrowRight')go(1);
+});
 
-  /* ══ CAMERA + UPLOAD ══ */
-  let stream = null, photoBlob = null, photoType = 'image/jpeg';
+/* EVENTS */
+$('vx').onclick=closeV;
+$('pv').onclick=()=>go(-1);
+$('nx').onclick=()=>go(1);
+$('zi').onclick=()=>{setZoom(V.s*1.5);apply()};
+$('zo').onclick=()=>{setZoom(V.s/1.5);apply()};
+$('rt').onclick=()=>{V.r=(V.r+90)%360;V.s=1;V.x=V.y=0;apply()};
+$('retry').onclick=show;
+$('vidb').onclick=()=>setId($('vid').textContent.indexOf('•')>-1);
+$('ckb').onclick=()=>{
+  const r=V.L[V.i];if(chk[r.k])delete chk[r.k];else chk[r.k]=1;
+  try{localStorage.setItem('mbr_chk',JSON.stringify(chk))}catch(e){}
+  ck();renderList();
+};
+$('vl').onclick=e=>{const b=e.target.closest('.v');if(b)openV(+b.dataset.i)};
+$('q').oninput=e=>{Q.q=e.target.value.trim();shown=60;renderList()};
+$('more').onclick=()=>{shown+=60;renderList()};
+$('chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;Q.c=b.dataset.c;shown=60;document.querySelectorAll('#chips button').forEach(x=>x.classList.toggle('on',x===b));renderList(true)};
+$('th').onclick=()=>{const d=document.body.classList.toggle('theme-dark');document.body.classList.toggle('theme-light',!d);localStorage.setItem('mb_theme',d?'theme-dark':'theme-light')};
+$('rf').onclick=refresh;
+$('out').onclick=()=>{clearInterval(T);localStorage.removeItem('mbd_key');sb=null;rows=[];$('key').value='';$('rem').checked=false;$('app').hidden=true;$('login').hidden=false};
 
-  function showPreview(blob) {
-    photoBlob = blob;
-    photoType = blob.type || 'image/jpeg';
-    const img = $('camPreview');
-    img.src = URL.createObjectURL(blob);
-    img.style.display = 'block';
-    $('camPlaceholder').style.display = 'none';
-    $('camVideo').style.display = 'none';
-    $('camFrame').style.display = 'none';
-    $('captureBtn').style.display = 'none';
-    $('openCamBtn').style.display = 'none';
-    $('retakeBtn').style.display = 'block';
-    $('uploadBtn').textContent = 'Upload a different image';
-  }
-
-  async function openCamera() {
-    clearError();
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      showError('Camera is not available here. You can upload an image instead.');
-      return;
-    }
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 960 } },
-        audio: false
-      });
-      const v = $('camVideo');
-      v.srcObject = stream;
-      v.style.display = 'block';
-      $('camPlaceholder').style.display = 'none';
-      $('camPreview').style.display = 'none';
-      $('camFrame').style.display = 'block';
-      $('openCamBtn').style.display = 'none';
-      $('captureBtn').style.display = 'block';
-      $('retakeBtn').style.display = 'none';
-    } catch (err) {
-      showError('Could not open the camera. Allow camera access, or upload an image instead.');
-    }
-  }
-
-  function stopCamera() {
-    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-    $('camVideo').style.display = 'none';
-    $('camFrame').style.display = 'none';
-  }
-
-  function capture() {
-    const v = $('camVideo'), c = $('camCanvas');
-    if (!v.videoWidth) return;
-    c.width = v.videoWidth; c.height = v.videoHeight;
-    c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
-    c.toBlob((blob) => {
-      stopCamera();
-      showPreview(blob);
-    }, 'image/jpeg', 0.85);
-  }
-
-  function retake() {
-    photoBlob = null;
-    $('camPreview').style.display = 'none';
-    $('uploadBtn').textContent = 'Upload image';
-    openCamera();
-  }
-
-  function onFileChosen() {
-    clearError();
-    const f = $('fileInput').files[0];
-    $('fileInput').value = '';
-    if (!f) return;
-    if (!f.type.startsWith('image/')) return showError('Please choose an image file.');
-    if (f.size > MAX_UPLOAD_BYTES) return showError('Image is too large (10 MB max).');
-    stopCamera();
-    showPreview(f);
-  }
-
-  $('openCamBtn').addEventListener('click', openCamera);
-  $('captureBtn').addEventListener('click', capture);
-  $('retakeBtn').addEventListener('click', retake);
-  $('uploadBtn').addEventListener('click', () => $('fileInput').click());
-  $('fileInput').addEventListener('change', onFileChosen);
-
-  /* ══ SUBMIT ══ */
-  let submitting = false;
-  $('submitBtn').addEventListener('click', async () => {
-    if (submitting) return;
-    clearError();
-
-    if (Date.now() >= DEADLINE) { closeVoting(); return; }
-
-    const name = $('fullName').value.trim();
-    const uid = $('uniId').value.trim();
-
-    if (!selected) return showError('Please pick a timetable.');
-    if (name.split(/\s+/).length < 2) return showError('Please enter your full name.');
-    if (!/^[A-Za-z0-9\-\/]{4,20}$/.test(uid)) return showError('Please enter a valid university ID number.');
-    if (!photoBlob) return showError('Please take or upload a photo of your university ID.');
-    if (!$('consentChk').checked) return showError('Please tick the confirmation box.');
-
-    const sbc = client();
-    if (!sbc) return showError('Unable to connect. Check your connection and reload.');
-
-    submitting = true;
-    const btn = $('submitBtn');
-    btn.disabled = true; btn.textContent = 'Submitting…';
-
-    try {
-      const normUid = uid.toLowerCase();
-
-      // 1) Already voted? (ID check)
-      const { data: already, error: e1 } = await sbc.rpc('has_voted', { p_uid: normUid });
-      if (e1) throw e1;
-      if (already) {
-        localStorage.setItem('mb_voted', '1');
-        return showDone('This university ID has already voted. Only one vote is allowed.');
-      }
-
-      // 2) Upload ID photo
-      const ext = photoType === 'image/png' ? 'png' : photoType === 'image/webp' ? 'webp' : 'jpg';
-      const path = normUid.replace(/[^a-z0-9]/g, '') + '_' + Date.now() + '.' + ext;
-      const { error: e2 } = await sbc.storage.from(BUCKET).upload(path, photoBlob, { contentType: photoType, upsert: false });
-      if (e2) throw e2;
-
-      // 3) Cast vote (IP recorded server-side; duplicates rejected by the database)
-      const { data: res, error: e3 } = await sbc.rpc('cast_vote', {
-        p_name: name, p_uid: normUid, p_choice: selected, p_photo: path, p_device: deviceId()
-      });
-      if (e3) throw e3;
-
-      if (res && res.ok) {
-        localStorage.setItem('mb_voted', '1');
-        showDone('Thank you, ' + name.split(/\s+/)[0] + '. Your vote was recorded.');
-      } else if (res && res.error === 'already_voted') {
-        localStorage.setItem('mb_voted', '1');
-        showDone('A vote has already been recorded from this ID or device.');
-      } else {
-        showError('Could not record your vote. Please try again.');
-      }
-    } catch (err) {
-      console.error(err);
-      showError('Something went wrong. Please check your connection and try again.');
-    } finally {
-      submitting = false;
-      btn.disabled = false; btn.textContent = 'Submit my vote';
-    }
-  });
-
-  /* ══ INIT ══ */
-  document.addEventListener('DOMContentLoaded', () => {
-    renderTimetables();
-    tick();
-    setInterval(tick, 1000);
-    if (localStorage.getItem('mb_voted') === '1') {
-      showDone('You have already voted from this device. Thank you!');
-    }
-  });
+/* SESSION */
+async function refresh(){const b=$('rf');b.classList.add('spin');try{await load()}catch(e){}b.classList.remove('spin')}
+async function connect(){
+  const k=$('key').value.trim(),e=$('lerr'),b=$('go');e.textContent='';
+  if(!k){e.textContent='Paste your service key first.';return}
+  if(role(k)==='anon'){e.textContent='That’s the public anon key, which can’t read votes. Paste the service_role key instead.';return}
+  b.disabled=true;b.textContent='Connecting…';
+  try{
+    sb=supabase.createClient(SB_URL,k,{auth:{persistSession:false,autoRefreshToken:false}});
+    await load();
+    localStorage.setItem('mbd_tbl',$('tbl').value.trim()||'votes');
+    localStorage.setItem('mbd_bkt',bucket());
+    if($('rem').checked)localStorage.setItem('mbd_key',k);else localStorage.removeItem('mbd_key');
+    clearInterval(T);T=setInterval(()=>{if(!document.hidden&&$('vw').hidden)refresh()},30000);
+    $('login').hidden=true;$('app').hidden=false;renderList(true);
+  }catch(x){e.textContent=errText(x);sb=null}
+  b.disabled=false;b.textContent='Open review page';
+}
+$('go').onclick=connect;
+$('key').addEventListener('keydown',e=>{if(e.key==='Enter')connect()});
+$('tbl').value=localStorage.getItem('mbd_tbl')||'votes';
+$('bkt').value=localStorage.getItem('mbd_bkt')||'vote-ids';
+const saved=localStorage.getItem('mbd_key');
+if(saved){$('key').value=saved;$('rem').checked=true;connect()}
 </script>
 </body>
 </html>
